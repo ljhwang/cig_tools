@@ -235,6 +235,12 @@ def main(args):
                     args.block_tokens[1]))
                 exit(1)
 
+    old_len = len(args.files)
+    args.files = list(set(args.files))
+
+    if len(args.files) != old_len:
+        print("WARNING: Received duplicate filenames. Removing duplicates.")
+
     for filename in args.files:
         with tempfile.NamedTemporaryFile('wt', delete=False) as tmp_file:
             with open(filename, "rt") as file:
