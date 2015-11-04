@@ -18,7 +18,7 @@ def block_comment(header, start_token, end_token):
 def check_header_for_block_tokens(header, start_token, end_token):
     if end_token in header:
         raise ValueError(
-            "Header string contains a token that end block comments.")
+            "Header string contains a token that ends block comments.")
 
 
 def interactive_interface(header, file):
@@ -36,7 +36,7 @@ def interactive_interface(header, file):
               "                 files while adding the header.")
         print("  a,all n,no  - Add header to this file and all remaining\n"
               "                 files without removing any lines.")
-        print("  a,all %N    - Remove %N line from this file and all\n"
+        print("  a,all %N    - Remove %N lines from this file and all\n"
               "                 remaining files while adding the header.")
 
     num_lines = len(header.splitlines())
