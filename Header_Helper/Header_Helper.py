@@ -109,6 +109,10 @@ def interactive_interface(header, file):
                     print("ERROR: unrecognized input.")
                     print_help()
                     continue
+        else:
+            print("ERROR: unrecognized input.")
+            print_help()
+            continue
 
 
 def create_main_parser():
