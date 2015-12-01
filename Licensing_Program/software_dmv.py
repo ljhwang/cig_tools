@@ -2,6 +2,30 @@ import argparse
 import json
 
 
+def load_config(cfg_fd):
+    dirty_input = json.load(cfg_fd)
+
+    sanitize_struct = {
+        "ProjectName" : lambda x: x == str(x),
+        "ProjectFiles" : {
+            lambda x: x == str(x) : {
+                "BlockComment" : {
+                    "BlockStart" : lambda x: x == str(x),
+                    "BlockLine" : lambda x: x == str(x),
+                    "BlockEnd" : lambda x: x == str(x),
+                },
+                "LineComment" : lambda x: x == str(x),
+            },
+            lambda x: x == str(x) : lambda x: x is None,
+        },
+        "IgnoredFiles" : lambda x: x == str(x),
+        "License" : lambda x: x in license_list(),
+        "LicenseParameters" : {
+            lambda x: x == str(x) : lambda x: True,
+        },
+    }
+
+
 def create_main_parser():
     parser = argparse.ArgumentParser(
         description="Where you go to get your software license.",
