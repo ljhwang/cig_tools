@@ -32,7 +32,7 @@ def create_main_parser():
     )
     subparsers = parser.add_subparsers(
         title="Commands",
-        dest="mode",
+        dest="command",
     )
 
     parser_check = subparsers.add_parser(
