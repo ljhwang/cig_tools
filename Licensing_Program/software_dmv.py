@@ -8,52 +8,36 @@ def create_main_parser():
     )
     subparsers = parser.add_subparsers(
         title="Commands",
+        dest="mode",
     )
 
     parser_check = subparsers.add_parser(
         "check",
-        help="Check all project files for licensing information.",
+        help="Check all project files for licensing information",
         description="Check all project files for licensing information.",
     )
     parser_check.add_argument(
         "--no-ignore",
         action="store_true",
-        help="Also check files that are set to be ignored.",
+        help="Also check files that are set to be ignored",
     )
     parser_check.add_argument(
         "-a",
         "--add-missing",
         action="store_true",
-        help="Add project license to files that fail the check.",
+        help="Add project license to files that fail the check",
     )
     parser_check.add_argument(
         "-f",
         "--files",
         nargs="+",
-        help="Check these files only.",
+        help="Check these files only",
     )
 
     parser_choose = subparsers.add_parser(
         "choose",
-        help="Choose a license to insert into your project.",
+        help="Choose a license to insert into your project",
         description="Choose a license to insert into your project.",
-    )
-
-    info_group = parser_choose.add_mutually_exclusive_group()
-
-    info_group.add_argument(
-        "-l",
-        "--list",
-        action="store_true",
-        help="List supported licenses.",
-    )
-    info_group.add_argument(
-        "-i",
-        "--info",
-        metavar="LICENSE",
-        help=("Show summary of license and necessary user parameters. This flag"
-              " can be combined with the verbose flag to show the complete"
-              " license text."),
     )
 
     verbosity_group = parser_choose.add_mutually_exclusive_group()
@@ -62,18 +46,49 @@ def create_main_parser():
         "-v",
         "--verbose",
         action="store_true",
-        help="Output more information about executed command.",
+        help="Output more information about executed command",
     )
     verbosity_group.add_argument(
         "-q",
         "--quiet",
         action="store_true",
-        help="Silence all non-error output.",
+        help="Silence all non-error output",
     )
 
-    parser_show = subparsers.add_parser(
-        "show",
-        help="Show current license settings for your project.",
+    parser_choose.add_argument(
+        "-p",
+        "--parameter",
+        help=("Set a license parameter. Input is in key:value form and"
+              " multiple parameters can be set by using multiple flags or by"
+              " concatenating key-value pairs with commas. e.g. '--parameter="
+              "project:foo,author:bar'.")
+    )
+
+    parser_list = subparsers.add_parser(
+        "list",
+        help="List supported licenses",
+        description="List supported licenses.",
+    )
+
+    parser_info = subparsers.add_parser(
+        "info",
+        help="Show summary of license and necessary user parameters",
+        description="Show summary of license and necessary user parameters.",
+    )
+    parser_info.add_argument(
+        "LICENSE",
+        help="License name",
+    )
+    parser_info.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Show full license text instead of summary",
+    )
+
+    parser_settings = subparsers.add_parser(
+        "settings",
+        help="Show current license settings for your project",
         description="Show current license settings for your project.",
     )
 
