@@ -61,6 +61,7 @@ def load_config(cfg_fd):
                 "items": {"type": "string"},
             },
         },
+        "required": ["License"],
     }
 
     if jsonschema:
