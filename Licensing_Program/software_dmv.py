@@ -7,7 +7,7 @@ except ImportError:
     jsonschema = None
 
 
-def load_config(cfg_fd):
+def load_config(cfg_fd, print_arg=""):
     dirty_input = json.load(cfg_fd)
 
     blockComments_schema = {
@@ -68,6 +68,9 @@ def load_config(cfg_fd):
         # TODO: Errors
         return jsonschema.validate(dirty_input, config_schema)
     else:
+        if print_arg != "quiet":
+            print("WARNING: The module 'jsonschema' is not available. The"
+                  " config file cannot be verified for correctness.")
         return dirty_input
 
 
