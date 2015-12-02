@@ -1,29 +1,73 @@
 import argparse
 import json
 
+try:
+    import jsonschema
+except ImportError:
+    jsonschema = None
+
 
 def load_config(cfg_fd):
     dirty_input = json.load(cfg_fd)
 
-    sanitize_struct = {
-        "ProjectName" : lambda x: x == str(x),
-        "ProjectFiles" : {
-            lambda x: x == str(x) : {
-                "BlockComment" : {
-                    "BlockStart" : lambda x: x == str(x),
-                    "BlockLine" : lambda x: x == str(x),
-                    "BlockEnd" : lambda x: x == str(x),
+    blockComments_schema = {
+        "type": "object",
+        "properties": {
+            "BlockComments": {
+                "type": "object",
+                "properties": {
+                    "BlockStart": {"type": "string", },
+                    "BlockLine": {"type": "string", },
+                    "BlockEnd": {"type": "string", },
                 },
-                "LineComment" : lambda x: x == str(x),
+                "required": ["BlockStart", "BlockEnd", ],
             },
-            lambda x: x == str(x) : lambda x: x is None,
         },
-        "IgnoredFiles" : lambda x: x == str(x),
-        "License" : lambda x: x in license_list(),
-        "LicenseParameters" : {
-            lambda x: x == str(x) : lambda x: True,
+        "required": ["BlockComments", ],
+    }
+
+    lineComments_schema = {
+        "type": "object",
+        "properties": {
+            "LineCommentStart": {"type": "string", },
+        },
+        "required": ["LineCommentStart", ],
+    }
+
+    config_schema = {
+        "type": "object",
+        "properties": {
+            "License": {
+                "type": "string",
+            },
+            "LicenseParameters": {
+                "type": "object",
+                "patternProperties": {
+                    "^[a-zA-Z0-9_-]+$": {},
+                },
+                "additionalProperties": False,
+            },
+            "CommentedFiles": {
+                "type": "object",
+                "patternProperties": {
+                    "^.+$": {
+                        "oneOf": [blockComments_schema, lineComments_schema, ],
+                    },
+                },
+                "additionalProperties": False,
+            },
+            "IgnoredFiles": {
+                "type": "array",
+                "items": {"type": "string", },
+            },
         },
     }
+
+    if jsonschema:
+        #TODO: Errors
+        return jsonschema.validate(dirty_input, config_schema)
+    else:
+        return dirty_input
 
 
 def create_main_parser():
