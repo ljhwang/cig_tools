@@ -16,22 +16,22 @@ def load_config(cfg_fd):
             "BlockComments": {
                 "type": "object",
                 "properties": {
-                    "BlockStart": {"type": "string", },
-                    "BlockLine": {"type": "string", },
-                    "BlockEnd": {"type": "string", },
+                    "BlockStart": {"type": "string"},
+                    "BlockLine": {"type": "string"},
+                    "BlockEnd": {"type": "string"},
                 },
-                "required": ["BlockStart", "BlockEnd", ],
+                "required": ["BlockStart", "BlockEnd"],
             },
         },
-        "required": ["BlockComments", ],
+        "required": ["BlockComments"],
     }
 
     lineComments_schema = {
         "type": "object",
         "properties": {
-            "LineCommentStart": {"type": "string", },
+            "LineCommentStart": {"type": "string"},
         },
-        "required": ["LineCommentStart", ],
+        "required": ["LineCommentStart"],
     }
 
     config_schema = {
@@ -51,20 +51,20 @@ def load_config(cfg_fd):
                 "type": "object",
                 "patternProperties": {
                     "^.+$": {
-                        "oneOf": [blockComments_schema, lineComments_schema, ],
+                        "oneOf": [blockComments_schema, lineComments_schema],
                     },
                 },
                 "additionalProperties": False,
             },
             "IgnoredFiles": {
                 "type": "array",
-                "items": {"type": "string", },
+                "items": {"type": "string"},
             },
         },
     }
 
     if jsonschema:
-        #TODO: Errors
+        # TODO: Errors
         return jsonschema.validate(dirty_input, config_schema)
     else:
         return dirty_input
