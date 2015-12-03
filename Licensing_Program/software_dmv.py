@@ -7,62 +7,9 @@ except ImportError:
     jsonschema = None
 
 
-def load_config(cfg_fd, print_arg=""):
+def load_config(schema_fd, cfg_fd, print_arg=""):
+    config_schema = json.load(schema_fd)
     dirty_input = json.load(cfg_fd)
-
-    blockComments_schema = {
-        "type": "object",
-        "properties": {
-            "BlockComments": {
-                "type": "object",
-                "properties": {
-                    "BlockStart": {"type": "string"},
-                    "BlockLine": {"type": "string"},
-                    "BlockEnd": {"type": "string"},
-                },
-                "required": ["BlockStart", "BlockEnd"],
-            },
-        },
-        "required": ["BlockComments"],
-    }
-
-    lineComments_schema = {
-        "type": "object",
-        "properties": {
-            "LineCommentStart": {"type": "string"},
-        },
-        "required": ["LineCommentStart"],
-    }
-
-    config_schema = {
-        "type": "object",
-        "properties": {
-            "License": {
-                "type": "string",
-            },
-            "LicenseParameters": {
-                "type": "object",
-                "patternProperties": {
-                    "^[a-zA-Z0-9_-]+$": {},
-                },
-                "additionalProperties": False,
-            },
-            "CommentedFiles": {
-                "type": "object",
-                "patternProperties": {
-                    "^.+$": {
-                        "oneOf": [blockComments_schema, lineComments_schema],
-                    },
-                },
-                "additionalProperties": False,
-            },
-            "IgnoredFiles": {
-                "type": "array",
-                "items": {"type": "string"},
-            },
-        },
-        "required": ["License"],
-    }
 
     if jsonschema:
         # TODO: Errors
