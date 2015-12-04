@@ -9,6 +9,10 @@ except ImportError:
     jsonschema = None
 
 
+_config_schema_path = "Licensing_Program/.config_schema.json"
+_config_path = ".license_settings.json"
+
+
 def load_config(schema_fd, cfg_fd, print_arg=""):
     config_schema = json.load(schema_fd)
     dirty_input = json.load(cfg_fd)
