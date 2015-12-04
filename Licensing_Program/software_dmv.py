@@ -13,18 +13,13 @@ _config_schema_path = "Licensing_Program/.config_schema.json"
 _config_path = ".license_settings.json"
 
 
-def load_config(schema_fd, cfg_fd, print_arg=""):
-    config_schema = json.load(schema_fd)
-    dirty_input = json.load(cfg_fd)
-
+def get_config(config, config_schema, info_level):
+    # TODO: Errors
     if jsonschema:
-        # TODO: Errors
-        return jsonschema.validate(dirty_input, config_schema)
-    else:
-        if print_arg != "quiet":
-            print("WARNING: The module 'jsonschema' is not available. The"
-                  " config file cannot be verified for correctness.")
-        return dirty_input
+        jsonschema.validate(config, config_schema)
+    elif info_level != "quiet":
+        print("WARNING: The module 'jsonschema' is not available. The"
+              " configuration file cannot be verified for correctness.")
 
 
 def create_main_parser():
@@ -116,12 +111,17 @@ def create_main_parser():
         help="Show current license settings for your project",
         description="Show current license settings for your project.",
     )
+    parser_settings.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+    )
 
     return parser
 
 
 def main(args):
-    pass
+    print(args)
 
 
 if __name__ == "__main__":
