@@ -65,23 +65,35 @@ def create_main_parser():
     verbosity_group.add_argument(
         "-v",
         "--verbose",
-        action="store_true",
+        action="store_const",
+        const="verbose",
+        dest="info_level",
+        default="",
         help="Output more information about executed command",
     )
     verbosity_group.add_argument(
         "-q",
         "--quiet",
-        action="store_true",
+        action="store_const",
+        const="quiet",
+        dest="info_level",
+        default="",
         help="Silence all non-error output",
     )
 
     parser_choose.add_argument(
         "-p",
         "--parameter",
+        action="append",
         help=("Set a license parameter. Input is in key:value form and"
               " multiple parameters can be set by using multiple flags or by"
               " concatenating key-value pairs with commas. e.g. '--parameter="
-              "project:foo,author:bar'.")
+              "project:foo,author:bar'."),
+    )
+    parser_choose.add_argument(
+        "LICENSE",
+        help=("License to be created for your project. Use the 'list' command"
+              " to see all supported licenses."),
     )
 
     parser_list = subparsers.add_parser(
@@ -96,7 +108,8 @@ def create_main_parser():
         description="Show summary of license and necessary user parameters.",
     )
     parser_info.add_argument(
-        "LICENSE",
+        "license",
+        metavar="LICENSE",
         help="License name",
     )
     parser_info.add_argument(
