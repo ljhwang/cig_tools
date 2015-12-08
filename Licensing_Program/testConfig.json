@@ -1,0 +1,9 @@
+{
+  "License": "GPL3+",
+  "IgnoredFiles": [
+    "*.py"
+  ],
+  "LicenseParameters": {
+    "ProjectName": "testProject"
+  }
+}

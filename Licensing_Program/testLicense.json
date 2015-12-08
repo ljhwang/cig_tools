@@ -1,0 +1,24 @@
+{
+  "name": "GPLv3",
+  "fullName": "GNU General Public License Version 3",
+  "summary": "<summary>",
+  "fullText": "<fullText>",
+  "header": "<header>",
+  "parameters": {
+    "copyrightWhoAndWhen": {
+      "type": "object",
+      "patternParameters": {
+        ".+": {
+          "type": "list",
+          "items": "integer"
+        }
+      }
+    },
+    "projectName": {
+      "type": "string"
+    },
+    "projectDescription": {
+      "type": "string"
+    }
+  }
+}
