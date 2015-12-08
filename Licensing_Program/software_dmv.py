@@ -19,7 +19,7 @@ def get_config(config, config_schema, info_level):
     # TODO: Errors
     if jsonschema:
         jsonschema.validate(config, config_schema)
-    elif info_level != "quiet":
+    elif info_level == "verbose":
         print("WARNING: The module 'jsonschema' is not available. The"
               " configuration file cannot be verified for correctness.")
 
@@ -108,7 +108,8 @@ def create_main_parser():
               "project:foo,author:bar'."),
     )
     parser_choose.add_argument(
-        "LICENSE",
+        "license",
+        metavar="LICENSE",
         help=("License to be created for your project. Use the 'list' command"
               " to see all supported licenses."),
     )
@@ -132,7 +133,10 @@ def create_main_parser():
     parser_info.add_argument(
         "-v",
         "--verbose",
-        action="store_true",
+        action="store_const",
+        const="verbose",
+        dest="info_level",
+        default="",
         help="Show full license text instead of summary",
     )
 
@@ -144,7 +148,11 @@ def create_main_parser():
     parser_settings.add_argument(
         "-v",
         "--verbose",
-        action="store_true",
+        action="store_const",
+        const="verbose",
+        dest="info_level",
+        default="",
+        help="Show all settings and their documentation",
     )
 
     return parser
