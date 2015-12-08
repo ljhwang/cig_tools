@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import argparse
+import glob
 import json
 
 try:
@@ -20,6 +21,21 @@ def get_config(config, config_schema, info_level):
     elif info_level != "quiet":
         print("WARNING: The module 'jsonschema' is not available. The"
               " configuration file cannot be verified for correctness.")
+
+
+def main_list(args):
+    def get_license_name(path):
+        return os.path.basename(os.path.splitext(path)[0])
+
+    for name in sorted(set(map(get_license_name,
+                               glob.iglob(_license_dir + "*")))):
+        print(name)
+
+
+#def main_info(args):
+#    license = json.load(_license_dir + args.license)
+#
+#    license["name"]
 
 
 def create_main_parser():
@@ -134,7 +150,18 @@ def create_main_parser():
 
 
 def main(args):
-    print(args)
+    config = get_config(args.info_level)
+
+    if args.command == "check":
+        pass
+    elif args.command == "choose":
+        pass
+    elif args.command == "list":
+        main_list(args)
+#    elif args.command == "info":
+#        main_info(args)
+    elif args.command == "settings":
+        pass
 
 
 if __name__ == "__main__":
