@@ -16,17 +16,25 @@ _config_schema_file = "Licensing_Program/config_schema.json"
 _config_file = "testConfig.json"
 _license_dir = "Licensing_Program/Licenses/"
 
+default_config = {}
 
-def get_config(config, config_schema, info_level):
+
+def get_config(info_level):
+    config = json.load(open(_config_file, "rt"))
+
     # TODO: Errors
     if jsonschema:
+        config_schema = json.load(open(_config_schema_file, "rt"))
         jsonschema.validate(config, config_schema)
     elif info_level == "verbose":
-        print("WARNING: The module 'jsonschema' is not available. The"
-              " configuration file cannot be verified for correctness.")
+        print("\nWARNING: The module 'jsonschema' is not available. The"
+              " configuration file cannot be verified for correctness.\n")
+
+    default_config.update(config)
+    return default_config
 
 
-def main_list(args):
+def main_list(args, config):
     def get_license_name(path):
         return os.path.basename(os.path.splitext(path)[0])
 
@@ -199,7 +207,7 @@ def main(args):
     elif args.command == "choose":
         pass
     elif args.command == "list":
-        main_list(args)
+        main_list(args, config)
 #    elif args.command == "info":
 #        main_info(args)
     elif args.command == "settings":
