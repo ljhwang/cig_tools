@@ -3,6 +3,8 @@
 import argparse
 import glob
 import json
+import os.path
+import pprint
 
 try:
     import jsonschema
@@ -11,7 +13,7 @@ except ImportError:
 
 
 _config_schema_file = "Licensing_Program/config_schema.json"
-_config_file = "$PROJECT/.license_settings.json"
+_config_file = "testConfig.json"
 _license_dir = "Licensing_Program/Licenses/"
 
 
@@ -37,6 +39,37 @@ def main_list(args):
 #    license = json.load(_license_dir + args.license)
 #
 #    license["name"]
+
+
+def main_settings(args, config):
+    if args.info_level != "verbose":
+        pprint.pprint(config, depth=2)
+    else:
+        def dict_doc_print(d, doc, acc=""):
+            indent = "  "
+
+            if hasattr(d, "items"):
+                for k, v in sorted(d.items()):
+                    if doc.get(k):
+                        print("\n" + acc + "# " + str(doc.get(k)))
+                    print(acc + str(k) + ":")
+
+                    if hasattr(v, "items"):
+                        dict_doc_print(v, doc, acc + indent)
+                    elif hasattr(v, "__iter__") and v != str(v):
+                        for x in v:
+                            print(acc + indent + str(x))
+                    else:
+                        print(acc + indent + str(v))
+
+        config_doc = {
+            "License": ("The license that will be used to generate the LICENSE"
+                        " file"),
+            "LicenseParameters": ("Necessary user input to be inserted into"
+                                  " the license"),
+        }
+
+        dict_doc_print(config, config_doc)
 
 
 def create_main_parser():
@@ -170,7 +203,7 @@ def main(args):
 #    elif args.command == "info":
 #        main_info(args)
     elif args.command == "settings":
-        pass
+        main_settings(args, config)
 
 
 if __name__ == "__main__":
