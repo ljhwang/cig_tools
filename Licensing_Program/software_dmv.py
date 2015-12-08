@@ -10,8 +10,9 @@ except ImportError:
     jsonschema = None
 
 
-_config_schema_path = "Licensing_Program/.config_schema.json"
-_config_path = ".license_settings.json"
+_config_schema_file = "Licensing_Program/config_schema.json"
+_config_file = "$PROJECT/.license_settings.json"
+_license_dir = "Licensing_Program/Licenses/"
 
 
 def get_config(config, config_schema, info_level):
