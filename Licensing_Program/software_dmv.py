@@ -1,8 +1,10 @@
 #! /usr/bin/env python3
 
 import argparse
+import functools
 import glob
 import json
+import operator
 import os.path
 import pprint
 
@@ -32,6 +34,34 @@ def get_config(info_level):
 
     default_config.update(config)
     return default_config
+
+
+def check_file(path, args, config):
+    pass
+
+
+def main_check(args, config):
+    if args.files:
+        filepaths = functools.reduce(
+            operator.or_,
+            map(set, map(glob.iglob, args.files)),
+            set())
+    else:
+        filepaths = functools.reduce(
+            operator.or_,
+            map(set, glob.iglob("**/*")),
+            set())
+
+    if not args.no_ignore and config["IgnoredFiles"]:
+        removepaths = functools.reduce(
+            operator.or_,
+            map(set, map(glob.iglob, config["IgnoredFiles"])),
+            set())
+
+        filepaths -= removepaths
+
+    for path in filepaths:
+        check_file(path, args, config)
 
 
 def main_list(args, config):
