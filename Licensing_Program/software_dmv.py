@@ -47,10 +47,7 @@ def main_check(args, config):
             map(set, map(glob.iglob, args.files)),
             set())
     else:
-        filepaths = functools.reduce(
-            operator.or_,
-            map(set, glob.iglob("**/*")),
-            set())
+        filepaths = set(glob.iglob("**/*"))
 
     if not args.no_ignore and config["IgnoredFiles"]:
         removepaths = functools.reduce(
