@@ -4,9 +4,11 @@ import argparse
 import functools
 import glob
 import json
+import itertools
 import operator
 import os.path
 import pprint
+import re
 
 try:
     import jsonschema
@@ -37,7 +39,34 @@ def get_config(info_level):
 
 
 def check_file(path, args, config):
-    pass
+    license_info = get_license_info(config)
+
+    with open(path, "rt") as file:
+        # The copyright header should be in the first 20 lines
+        fileslice = itertools.islice(file, 20)
+        for linenum, line in enumerate(fileslice):
+            if "Copyright".casefold() in line.casefold():
+                break
+        else:
+            return False
+
+        header = format_header(license_info["Header"], path, config)
+        # re.split keeps strings captured by regex groups
+        header_lines = (x for x in re.split(r"(.*?\n)", header) if x)
+
+        nonmatching_lines = filter(
+            lambda x: operator.ne(x[1], x[2]),
+            zip(itertools.count(linenum),
+                header_lines,
+                itertools.chain([line], file)
+            )
+        )
+
+        if args.info_level == "verbose" and nonmatching_lines:
+            print("In file {}:".format(file.name))
+            for i, correct_line, file_line in nonmatching_lines:
+                print("Line {:2} does not match license header.".format(i))
+                print("#TODO")
 
 
 def main_check(args, config):
