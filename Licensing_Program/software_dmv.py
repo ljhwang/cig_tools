@@ -55,18 +55,17 @@ def check_file(path, args, config):
         header_lines = (x for x in re.split(r"(.*?\n)", header) if x)
 
         nonmatching_lines = filter(
-            lambda x: operator.ne(x[1], x[2]),
-            zip(itertools.count(linenum),
-                header_lines,
+            lambda x: operator.ne(*x),
+            zip(header_lines,
                 itertools.chain([line], file)
             )
         )
 
         if args.info_level == "verbose" and nonmatching_lines:
-            print("In file {}:".format(file.name))
-            for i, correct_line, file_line in nonmatching_lines:
-                print("Line {:2} does not match license header.".format(i))
-                print("#TODO")
+            print(("In file {}: there are {} lines that do not match the"
+                   " expected license header.").format(file.name,
+                                                       len(nonmatching_lines))
+            )
 
 
 def main_check(args, config):
