@@ -86,16 +86,20 @@ def check_file(path, args, config):
 
         nonmatching_lines = filter(
             lambda x: operator.ne(*x),
-            zip(header_lines,
+            zip(
+                header_lines,
                 itertools.chain([line], file)
             )
         )
 
         if args.info_level == "verbose" and nonmatching_lines:
-            print(("In file {}: there are {} lines that do not match the"
-                   " expected license header.").format(file.name,
-                                                       len(nonmatching_lines))
+            print(
+                ("In file {}: there are {} lines that do not match the"
+                 " expected license header.").format(file.name,
+                                                     len(nonmatching_lines))
             )
+
+        return not bool(nonmatching_lines)
 
 
 def main_check(args, config):
