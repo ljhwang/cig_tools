@@ -19,6 +19,7 @@ except ImportError:
 _config_schema_file = "Licensing_Program/config_schema.json"
 _config_file = "testConfig.json"
 _license_dir = "Licensing_Program/Licenses/"
+_generic_headerfile = "Licensing_Program/Licenses/generic_header.txt"
 
 default_config = {}
 
@@ -36,6 +37,35 @@ def get_config(info_level):
 
     default_config.update(config)
     return default_config
+
+
+def get_license_info(license_name):
+    license_txtfile = open(
+        os.path.join(_license_dir, license_name + ".txt"),
+        "rt",
+    )
+    license_json = json.load(
+        open(
+            os.path.join(_license_dir, license_name + ".json"),
+            "rt",
+        )
+    )
+
+    try:
+        header_txtfile = open(
+            os.path.join(_license_dir, license_name + "_header.txt"),
+            "rt",
+        )
+    except FileNotFoundError:
+        header_txtfile = open(
+            os.path.join(_license_dir, _generic_headerfile),
+            "rt",
+        )
+
+    license_json["fullText"] = str(license_txtfile)
+    license_json["headerText"] = str(header_txtfile)
+
+    return license_json
 
 
 def check_file(path, args, config):
