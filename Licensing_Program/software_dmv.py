@@ -40,12 +40,12 @@ def antpattern_to_regex(pattern):
         else:
             return symbol
 
-    return "^" + functools.reduce(
+    return "^(" + functools.reduce(
         operator.add,
         map(symbol_replace, re.split(r"(\.|\?|[$^+}{\[\])(|\\]|\*+)",
                                      pattern)),
         "",
-    ) + "$"
+    ) + ")$"
 
 
 def get_config(args):
