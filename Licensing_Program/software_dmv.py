@@ -18,7 +18,7 @@ except ImportError:
 
 _config_schema_file = "Licensing_Program/config_schema.json"
 _config_file = "testConfig.json"
-_license_dir = "Licensing_Program/Licenses/"
+_license_dir = "Licenses/"
 _generic_headerfile = "Licensing_Program/Licenses/generic_header.txt"
 
 default_config = {}
@@ -48,14 +48,14 @@ def antpattern_to_regex(pattern):
     )
 
 
-def get_config(info_level):
+def get_config(args):
     config = json.load(open(_config_file, "rt"))
 
     # TODO: Errors
     if jsonschema:
         config_schema = json.load(open(_config_schema_file, "rt"))
         jsonschema.validate(config, config_schema)
-    elif info_level == "verbose":
+    elif hasattr(args, "info_level") and args.info_level == "verbose":
         print("\nWARNING: The module 'jsonschema' is not available. The"
               " configuration file cannot be verified for correctness.\n")
 
@@ -313,7 +313,7 @@ def create_main_parser():
 
 
 def main(args):
-    config = get_config(args.info_level)
+    config = get_config(args)
 
     if args.command == "check":
         pass
