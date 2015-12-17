@@ -6,7 +6,7 @@ import glob
 import json
 import itertools
 import operator
-import os.path
+import os
 import pprint
 import re
 
@@ -22,6 +22,30 @@ _license_dir = "Licensing_Program/Licenses/"
 _generic_headerfile = "Licensing_Program/Licenses/generic_header.txt"
 
 default_config = {}
+
+
+# antpatterns: https://ant.apache.org/manual/dirtasks.html#patterns
+def antpattern_to_regex(pattern):
+    def symbol_replace(symbol):
+        if symbol == ".":
+            return r"\."
+        elif symbol == "?":
+            return r"[^" "\\" + os.path.sep + r"]"
+        elif symbol == "*":
+            return r"[^" "\\" + os.path.sep + r"]*"
+        elif re.match(r"\*\*+", symbol):
+            return r".*"
+        elif re.match(r"[$^+|}{)(\[\]\\]", symbol):
+            return "\\" + symbol
+        else:
+            return symbol
+
+    return functools.reduce(
+        operator.add,
+        map(symbol_replace, re.split(r"(\.|\?|[$^+}{\[\])(|\\]|\*+)",
+                                     pattern)),
+        "",
+    )
 
 
 def get_config(info_level):
