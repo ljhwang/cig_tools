@@ -127,7 +127,12 @@ def main_check(args, config):
     if args.files:
         filepaths = set(args.files)
     else:
-        filepaths = glob.iglob("**/*")
+        filepaths = functools.reduce(
+            itertools.chain,
+            (map(functools.partial(os.path.join, cwd), files)
+                for cwd, dirs, files in os.walk(".")),
+            [],
+        )
 
     if not args.no_ignore and config["IgnoredFiles"]:
         def ignore_to_regex(s):
