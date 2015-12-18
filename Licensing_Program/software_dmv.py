@@ -133,12 +133,23 @@ def main_check(args, config):
         filepaths = glob.iglob("**/*")
 
     if not args.no_ignore and config["IgnoredFiles"]:
-        removepaths = functools.reduce(
-            operator.or_,
-            map(set, map(glob.iglob, config["IgnoredFiles"])),
-            set())
+        def ignore_to_regex(s):
+            if s.startswith("re:"):
+                return s.lstrip("re:")
+            elif s.startswith("ant:"):
+                return antpattern_to_regex(s.lstrip("ant:"))
+            else:
+                return antpattern_to_regex(s)
 
-        filepaths -= removepaths
+        ignore_regex = functools.reduce(
+            lambda x,y: x + "|" + y,
+            map(ignore_to_regex, config["IgnoredFiles"])
+        )
+
+        filepaths = filter(
+            lambda x: not re.match(ignore_regex, x),
+            filepaths,
+        )
 
     for path in filepaths:
         check_file(path, args, config)
