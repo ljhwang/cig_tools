@@ -26,25 +26,22 @@ default_config = {}
 
 # antpatterns: https://ant.apache.org/manual/dirtasks.html#patterns
 def antpattern_to_regex(pattern):
-    def symbol_replace(symbol):
-        if symbol == ".":
-            return r"\."
-        elif symbol == "?":
-            return r"[^" "\\" + os.path.sep + r"]"
-        elif symbol == "*":
-            return r"[^" "\\" + os.path.sep + r"]*"
-        elif re.match(r"\*\*+", symbol):
-            return r".*"
-        elif re.match(r"[$^+|}{)(\[\]\\]", symbol):
-            return "\\" + symbol
-        else:
-            return symbol
-
-    return "^(" + functools.reduce(
-        operator.add,
-        map(symbol_replace, re.split(r"(\.|\?|[$^+}{\[\])(|\\]|\*+)",
-                                     pattern)),
-        "",
+    return "^(" + re.sub(
+        r"\*\*/?",
+        r".*?",
+        re.sub(
+            r"(?<!\*)\*(?!\*)",
+            r"[^/]*",
+            re.sub(
+                r"\?",
+                r".",
+                re.sub(
+                    r"([.+^$|{}()\[\]])",
+                    r"\\\1",
+                    pattern
+                )
+            )
+        )
     ) + ")$"
 
 
@@ -152,7 +149,8 @@ def main_check(args, config):
         )
 
     for path in filepaths:
-        check_file(path, args, config)
+        print(path)
+        #check_file(path, args, config)
 
 
 def main_list(args, config):
