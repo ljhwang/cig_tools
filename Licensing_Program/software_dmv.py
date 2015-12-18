@@ -128,12 +128,9 @@ def check_file(path, args, config):
 
 def main_check(args, config):
     if args.files:
-        filepaths = functools.reduce(
-            operator.or_,
-            map(set, map(glob.iglob, args.files)),
-            set())
+        filepaths = set(args.files)
     else:
-        filepaths = set(glob.iglob("**/*"))
+        filepaths = glob.iglob("**/*")
 
     if not args.no_ignore and config["IgnoredFiles"]:
         removepaths = functools.reduce(
