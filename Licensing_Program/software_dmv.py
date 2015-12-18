@@ -230,6 +230,7 @@ def create_main_parser():
     parser_check.add_argument(
         "-f",
         "--files",
+        metavar="FILE",
         nargs="+",
         help="Check these files only",
     )
