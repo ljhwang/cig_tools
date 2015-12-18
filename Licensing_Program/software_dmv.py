@@ -209,6 +209,7 @@ def create_main_parser():
         title="Commands",
         dest="command",
     )
+    subparsers.required = True
 
     parser_check = subparsers.add_parser(
         "check",
