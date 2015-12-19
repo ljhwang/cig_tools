@@ -27,18 +27,22 @@ default_config = {}
 # antpatterns: https://ant.apache.org/manual/dirtasks.html#patterns
 def antpattern_to_regex(pattern):
     return "^(" + re.sub(
-        r"\*\*/?",
-        r".*?",
+        r"\*\*+",
+        r"[^/]*",  # get rid of mis-used double asterisks
         re.sub(
-            r"(?<!\*)\*(?!\*)",
-            r"[^/]*",
+            r"((?<=/)|(?<=^))\*\*/?",
+            r".*?",  # the directory name is '**', not 'tmp**/' etc.
             re.sub(
-                r"\?",
-                r".",
+                r"(?<!\*)\*(?!\*)",
+                r"[^/]*",  # ant '*' doesn't leave cwd
                 re.sub(
-                    r"([.+^$|{}()\[\]])",
-                    r"\\\1",
-                    pattern
+                    r"\?",
+                    r".",  # Convert ant '?' to re '.'
+                    re.sub(
+                        r"([.+^$|{}()\[\]])",
+                        r"\\\1",  # Escape other regex symbols
+                        pattern,
+                    )
                 )
             )
         )
