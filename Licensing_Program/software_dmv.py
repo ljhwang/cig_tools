@@ -28,13 +28,13 @@ default_config = {}
 def antpattern_to_regex(pattern):
     return "^(" + re.sub(
         r"\*\*+",
-        r"[^/]*",  # get rid of mis-used double asterisks
+        r"[^/]*",  # replace misused double asterisks with single asterisk
         re.sub(
-            r"((?<=/)|(?<=^))\*\*/?",
-            r".*?",  # the directory name is '**', not 'tmp**/' etc.
+            r"(/|^)\*\*+(/|$)",
+            r"\1.*?\2",  # the directory name is '**', not 'tmp**/' etc.
             re.sub(
-                r"(?<!\*)\*(?!\*)",
-                r"[^/]*",  # ant '*' doesn't leave cwd
+                r"([^*]|^)\*([^*]|$)",
+                r"\1[^/]*\2",  # ant '*' doesn't leave cwd
                 re.sub(
                     r"\?",
                     r".",  # Convert ant '?' to re '.'
