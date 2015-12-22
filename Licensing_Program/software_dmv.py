@@ -25,9 +25,10 @@ default_config = {}
 
 
 # antpatterns: https://ant.apache.org/manual/dirtasks.html#patterns
+# this assumes the posix path separator '/'
 def antpattern_to_regex(pattern):
     return "^(" + re.sub(
-        r"\*\*+",
+        r"\*\*+",  # TODO: maybe show a warning/error for this
         r"[^/]*",  # replace misused double asterisks with single asterisk
         re.sub(
             r"(/|^)\*\*+(/|$)",
