@@ -107,8 +107,7 @@ def check_file(path, args, config):
             return False
 
         header = format_header(license_info["Header"], path, config)
-        # re.split keeps strings captured by regex groups
-        header_lines = (x for x in re.split(r"(.*?\n)", header) if x)
+        header_lines = (x + "\n" for x in header.splitlines())
 
         nonmatching_lines = filter(
             lambda x: operator.ne(*x),
