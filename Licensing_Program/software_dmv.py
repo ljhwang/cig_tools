@@ -148,7 +148,7 @@ def main_check(args, config):
                 return antpattern_to_regex(s)
 
         ignore_regex = functools.reduce(
-            lambda x,y: x + "|" + y,
+            lambda x, y: x + "|" + y,
             map(ignore_to_regex, config["IgnoredFiles"])
         )
 
