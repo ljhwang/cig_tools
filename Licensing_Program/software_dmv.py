@@ -299,6 +299,7 @@ def create_main_parser():
         "-p",
         "--parameter",
         action="append",
+        dest="parameters",
         help=("Set a license parameter. Input is in key:value form and"
               " multiple parameters can be set by using multiple flags or by"
               " concatenating key-value pairs with commas. e.g. '--parameter="
