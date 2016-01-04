@@ -158,6 +158,36 @@ def main_check(args, config):
         #check_file(path, args, config)
 
 
+def main_choose(args, config):
+    if args.license in license_list():
+        def arg_to_parameters(string_list):
+            return dict(pair.split(":")
+                        for arg in string_list
+                        for pair in arg.split(","))
+
+        if args.parameters:
+            try:
+                args.parameters = arg_to_parameters(args.parameters)
+            except TypeError:
+                print("ERROR: Parameter input not formatted properly")
+                exit(1)
+
+        license_fd, header_fd = get_license_files(args.license)
+
+        try:
+            same = filecmp.cmp(license_fd.name, "LICENSE", shallow=False)
+        except FileNotFoundError:
+            same = False
+
+        if not same:
+            with open("LICENSE", "wt") as project_license:
+                project_license.write(license_fd)
+
+    else:
+        print(("{} is not a supported license. Please use the list command to"
+               " see a list of supported licenses.").format(args.license))
+
+
 def main_list(args, config):
     def get_license_name(path):
         return os.path.basename(os.path.splitext(path)[0])
