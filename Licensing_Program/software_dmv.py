@@ -131,12 +131,9 @@ def main_check(args, config):
     if args.files:
         filepaths = set(args.files)
     else:
-        filepaths = functools.reduce(
-            itertools.chain,
-            (map(functools.partial(os.path.join, cwd), files)
-                for cwd, dirs, files in os.walk(".")),
-            [],
-        )
+        filepaths = (os.path.join(cwd, file)
+                     for cwd, dirs, files in os.walk(".")
+                     for file in files)
 
     if not args.no_ignore and config["IgnoredFiles"]:
         def ignore_to_regex(s):
