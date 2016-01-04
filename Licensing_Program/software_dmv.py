@@ -127,6 +127,15 @@ def check_file(path, args, config):
         return not bool(nonmatching_lines)
 
 
+def ignore_to_regex(s):
+    if s.startswith("re:"):
+        return s.lstrip("re:")
+    elif s.startswith("ant:"):
+        return antpattern_to_regex(s.lstrip("ant:"))
+    else:
+        return antpattern_to_regex(s)
+
+
 def main_check(args, config):
     if args.files:
         filepaths = set(args.files)
@@ -135,24 +144,14 @@ def main_check(args, config):
                      for cwd, dirs, files in os.walk(".")
                      for file in files)
 
-    if not args.no_ignore and config["IgnoredFiles"]:
-        def ignore_to_regex(s):
-            if s.startswith("re:"):
-                return s.lstrip("re:")
-            elif s.startswith("ant:"):
-                return antpattern_to_regex(s.lstrip("ant:"))
-            else:
-                return antpattern_to_regex(s)
-
+    if (not args.no_ignore) and config["IgnoredFiles"]:
         ignore_regex = functools.reduce(
             lambda x, y: x + "|" + y,
             map(ignore_to_regex, config["IgnoredFiles"])
         )
 
-        filepaths = filter(
-            lambda x: not re.match(ignore_regex, x),
-            filepaths,
-        )
+        filepaths = (file for file in filepaths
+                     if not re.match(ignore_regex, file))
 
     for path in filepaths:
         print(path)
