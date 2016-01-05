@@ -145,9 +145,10 @@ def main_check(args, config):
                      for file in files)
 
     if (not args.no_ignore) and config["IgnoredFiles"]:
-        ignore_regex = functools.reduce(
-            lambda x, y: x + "|" + y,
-            map(ignore_to_regex, config["IgnoredFiles"])
+        ignore_regex = "|".join(
+            ignore_to_regex(ignore_string)
+            for ignore_string
+            in config["IgnoredFiles"]
         )
 
         filepaths = (file for file in filepaths
