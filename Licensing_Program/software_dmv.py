@@ -127,13 +127,13 @@ def check_file(path, args, config):
         return not bool(nonmatching_lines)
 
 
-def ignore_to_regex(s):
-    if s.startswith("re:"):
-        return s.lstrip("re:")
-    elif s.startswith("ant:"):
-        return antpattern_to_regex(s.lstrip("ant:"))
+def ignore_to_regex(ignore_string):
+    if ignore_string.startswith("re:"):
+        return ignore_string.lstrip("re:")
+    elif ignore_string.startswith("ant:"):
+        return antpattern_to_regex(ignore_string.lstrip("ant:"))
     else:
-        return antpattern_to_regex(s)
+        return antpattern_to_regex(ignore_string)
 
 
 def main_check(args, config):
