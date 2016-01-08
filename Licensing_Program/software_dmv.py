@@ -193,8 +193,8 @@ def main_list(args, config):
     def get_license_name(path):
         return os.path.basename(os.path.splitext(path)[0])
 
-    for name in sorted(set(map(get_license_name,
-                               glob.iglob(_license_dir + "*")))):
+    for name in sorted({get_license_name(path)
+                        for path in glob.iglob(_license_dir + "*.txt")}):
         print(name)
 
 
