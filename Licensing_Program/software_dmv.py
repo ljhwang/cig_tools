@@ -109,13 +109,13 @@ def check_file(path, args, config):
         header = format_header(license_info["Header"], path, config)
         header_lines = (x + "\n" for x in header.splitlines())
 
-        nonmatching_lines = filter(
-            lambda x: operator.ne(*x),
-            zip(
-                header_lines,
-                itertools.chain([line], file)
-            )
-        )
+        # pylint: disable=undefined-loop-variable
+        nonmatching_lines = [
+            (header_line, file_line)
+            for header_line, file_line
+            in zip(header_lines, itertools.chain([line], file))
+            if header_line != file_line
+        ]
 
         if args.info_level == "verbose" and nonmatching_lines:
             print(
