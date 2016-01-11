@@ -10,59 +10,11 @@ import os
 import pprint
 import re
 
-try:
-    import jsonschema
-except ImportError:
-    jsonschema = None
+import config_handling
 
 
-_config_schema_file = "Licensing_Program/config_schema.json"
-_config_file = "testConfig.json"
 _license_dir = "Licenses/"
 _generic_headerfile = "Licensing_Program/Licenses/generic_header.txt"
-
-default_config = {}
-
-
-# antpatterns: https://ant.apache.org/manual/dirtasks.html#patterns
-# this assumes the posix path separator '/'
-def antpattern_to_regex(pattern):
-    return "^(" + re.sub(
-        r"\*\*+",  # TODO: maybe show a warning/error for this
-        r"[^/]*",  # replace misused double asterisks with single asterisk
-        re.sub(
-            r"(/|^)\*\*+(/|$)",
-            r"\1.*?\2",  # the directory name is '**', not 'tmp**/' etc.
-            re.sub(
-                r"([^*]|^)\*([^*]|$)",
-                r"\1[^/]*\2",  # ant '*' doesn't leave cwd
-                re.sub(
-                    r"\?",
-                    r".",  # Convert ant '?' to re '.'
-                    re.sub(
-                        r"([.+^$|{}()\[\]])",
-                        r"\\\1",  # Escape other regex symbols
-                        pattern,
-                    )
-                )
-            )
-        )
-    ) + ")$"
-
-
-def get_config(args):
-    config = json.load(open(_config_file, "rt"))
-
-    # TODO: Errors
-    if jsonschema:
-        config_schema = json.load(open(_config_schema_file, "rt"))
-        jsonschema.validate(config, config_schema)
-    elif hasattr(args, "info_level") and args.info_level == "verbose":
-        print("\nWARNING: The module 'jsonschema' is not available. The"
-              " configuration file cannot be verified for correctness.\n")
-
-    default_config.update(config)
-    return default_config
 
 
 def get_license_info(license_name):
@@ -125,15 +77,6 @@ def check_file(path, args, config):
             )
 
         return not bool(nonmatching_lines)
-
-
-def ignore_to_regex(ignore_string):
-    if ignore_string.startswith("re:"):
-        return ignore_string.lstrip("re:")
-    elif ignore_string.startswith("ant:"):
-        return antpattern_to_regex(ignore_string.lstrip("ant:"))
-    else:
-        return antpattern_to_regex(ignore_string)
 
 
 def main_check(args, config):
@@ -358,7 +301,7 @@ def create_main_parser():
 
 
 def main(args):
-    config = get_config(args)
+    config = config_handling.load_project_config(args.info_level)
 
     if args.command == "check":
         pass
