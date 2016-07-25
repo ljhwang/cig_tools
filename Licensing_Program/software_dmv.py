@@ -11,6 +11,8 @@ import pprint
 import re
 
 import config_handling
+import license_handling
+import userproject_handling
 
 
 _license_dir = "Licenses/"
