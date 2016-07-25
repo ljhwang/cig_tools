@@ -13,7 +13,7 @@ except ImportError:
     jsonschema = None
 
 
-CONFIG_FILEPATH = ".licensing.json"
+CONFIG_FILENAME = ".licensing.json"
 
 CONFIG_SCHEMA = {
     "properties": {
@@ -151,7 +151,7 @@ def load_project_config(cwd=".", info_level=""):
     """Parses the project config file in 'cwd'. If the 'jsonschema' module is
     available, the config file is checked for data errors.
     """
-    project_config = json.load(open(os.path.join(cwd, CONFIG_FILEPATH), "rt"))
+    project_config = json.load(open(os.path.join(cwd, CONFIG_FILENAME), "rt"))
 
     if jsonschema:
         jsonschema.validate(project_config, CONFIG_SCHEMA)
