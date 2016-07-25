@@ -15,41 +15,8 @@ import license_handling
 import userproject_handling
 
 
-_license_dir = "Licenses/"
-_generic_headerfile = "Licensing_Program/Licenses/generic_header.txt"
-
-
-def get_license_info(license_name):
-    license_txtfile = open(
-        os.path.join(_license_dir, license_name + ".txt"),
-        "rt",
-    )
-    license_json = json.load(
-        open(
-            os.path.join(_license_dir, license_name + ".json"),
-            "rt",
-        )
-    )
-
-    try:
-        header_txtfile = open(
-            os.path.join(_license_dir, license_name + "_header.txt"),
-            "rt",
-        )
-    except FileNotFoundError:
-        header_txtfile = open(
-            os.path.join(_license_dir, _generic_headerfile),
-            "rt",
-        )
-
-    license_json["fullText"] = str(license_txtfile)
-    license_json["headerText"] = str(header_txtfile)
-
-    return license_json
-
-
 def check_file(path, args, config):
-    license_info = get_license_info(config)
+    license_info = license_handling.get_license_info(config)
 
     with open(path, "rt") as file:
         # The copyright header should be in the first 20 lines
@@ -105,7 +72,7 @@ def main_check(args, config):
 
 
 def main_choose(args, config):
-    if args.license in license_list():
+    if args.license in license_handling.get_license_list():
         def arg_to_parameters(string_list):
             return dict(pair.split(":")
                         for arg in string_list
@@ -135,12 +102,8 @@ def main_choose(args, config):
 
 
 def main_list(args, config):
-    def get_license_name(path):
-        return os.path.basename(os.path.splitext(path)[0])
-
-    for name in sorted({get_license_name(path)
-                        for path in glob.iglob(_license_dir + "*.txt")}):
-        print(name)
+    for license in license_handling.get_license_list():
+        print(license)
 
 
 #def main_info(args):
