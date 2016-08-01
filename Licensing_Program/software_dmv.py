@@ -12,7 +12,7 @@ import re
 
 import config_handling
 import license_handling
-import userproject_handling
+import userfiles_handling
 
 
 def check_file(path, args, config):
@@ -68,7 +68,7 @@ def main_check(args, config):
 
     for path in filepaths:
         print(path)
-        #check_file(path, args, config)
+        #userfiles_handling.check_file(path, args, config)
 
 
 def main_choose(args, config):
