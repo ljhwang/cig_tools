@@ -2,7 +2,6 @@
  in the software_dmv project.
 """
 
-import functools
 import os
 import re
 
@@ -15,7 +14,6 @@ LICENSE_EXT = "txt"
 LICENSE_HEADER_SUFFIX = "_header"
 
 
-@functools.lru_cache()
 def get_license_list():
     return sorted({
         os.path.basename(path).rstrip(LICENSE_HEADER_SUFFIX)
