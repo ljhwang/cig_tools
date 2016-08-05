@@ -159,7 +159,7 @@ def load_project_config(cwd=".", info_level=""):
         print(
             "\nWARNING: 'jsonschema' module could not be found. User"
             " configuration will not be checked for errors.",
-            file=sys.stderr
+            file=sys.stderr,
         )
 
     return project_config
