@@ -15,6 +15,12 @@ def check_file(path, args, config):
             if "Copyright".casefold() in line.casefold():
                 break
         else:
+            if args.info_level == "verbose":
+                print(
+                    "File {} does not appear to have a license header.".format(
+                        file.name)
+                )
+
             return False
 
         header = format_header(license_info["Header"], path, config)
