@@ -2,7 +2,22 @@
 files.
 """
 
+import itertools
+
 import license_handling
+
+
+HEADER_IN_FIRST_N_LINES = 20
+
+
+def _find_header_start_line(path):
+    with open(path, "rt") as source_file:
+        fileslice = itertools.islice(source_file, HEADER_IN_FIRST_N_LINES)
+        for linenum, line in enumerate(fileslice):
+            if "Copyright".casefold() in line.casefold():
+                return linenum
+
+    return None
 
 
 def check_file(path, args, config):
