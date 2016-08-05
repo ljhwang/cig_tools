@@ -51,3 +51,28 @@ def get_license_info(license_name):
     license_json["headerText"] = str(header_txtfile)
 
     return license_json
+
+
+def format_header(header, path, config):
+    """Headers use double curly braces to describe required inputs.
+    Inside the curly braces are the name of the input and the type of the input.
+    Types are prefixed by double colons and are limited to JSON types.
+    """
+    pattern = re.compile(r"{{\s*([^\s]+)\s+::([^\s]+)\s*}}")
+    match = pattern.search(header)
+    formatted_header = ""
+
+    while match:
+        begin, end = match.span()
+        input_name, input_type = match.groups()
+
+        formatted_header += match.string[:begin] + config_to_str(
+            config["LicenseParameters"][input_name],
+            input_type
+        )
+
+        match = pattern.search(match.string[end:])
+
+    formatted_header += match.string[end:]
+
+    return formatted_header
