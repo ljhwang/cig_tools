@@ -30,19 +30,19 @@ def get_license_info(license_name):
     )
     license_json = json.load(
         open(
-            os.path.join(_license_dir, license_name + ".json"),
+            os.path.join(LICENSE_DIR, license_name + ".json"),
             "rt",
         )
     )
 
     try:
         header_txtfile = open(
-            os.path.join(_license_dir, license_name + "_header.txt"),
+            os.path.join(LICENSE_DIR, license_name + "_header.txt"),
             "rt",
         )
     except FileNotFoundError:
         header_txtfile = open(
-            os.path.join(_license_dir, _generic_headerfile),
+            os.path.join(LICENSE_DIR, DEFAULT_LICENSE + LICENSE_HEADER_SUFFIX),
             "rt",
         )
 
