@@ -55,20 +55,18 @@ def get_license_info(license_name):
 
 def format_header(header, path, config):
     """Headers use double curly braces to describe required inputs.
-    Inside the curly braces are the name of the input and the type of the input.
-    Types are prefixed by double colons and are limited to JSON types.
+    Inside a set of curly braces is the name of the input.
     """
-    pattern = re.compile(r"{{\s*([^\s]+)\s+::([^\s]+)\s*}}")
+    pattern = re.compile(r"{{\s*([^\s]+)\s*}}")
     match = pattern.search(header)
     formatted_header = ""
 
     while match:
         begin, end = match.span()
-        input_name, input_type = match.groups()
+        input_name = match.groups()
 
-        formatted_header += match.string[:begin] + config_to_str(
-            config["LicenseParameters"][input_name],
-            input_type
+        formatted_header += (match.string[:begin]
+            + str(config["LicenseParameters"][input_name])
         )
 
         match = pattern.search(match.string[end:])
