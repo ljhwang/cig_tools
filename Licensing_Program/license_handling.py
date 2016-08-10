@@ -57,7 +57,7 @@ def format_header(header, path, config):
     """Headers use double curly braces to describe required inputs.
     Inside a set of curly braces is the name of the input.
     """
-    pattern = re.compile(r"{{\s*([^\s]+)\s*}}")
+    pattern = re.compile(r"{{\s*([a-zA-Z0-9_-]+)\s*}}")
     match = pattern.search(header)
     formatted_header = ""
 
