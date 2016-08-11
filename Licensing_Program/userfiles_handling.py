@@ -61,8 +61,8 @@ def file_has_correct_header(path, args, config):
 
 
 def insert_header(path, header, linenum=0):
-    with open(path, "rt") as user_file:
-        with tempfile.mkstemp() as outfile:
+    with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
+        with open(path, "rt") as user_file:
             for i, line in enumerate(user_file):
                 if i == linenum:
                     outfile.write(header)
