@@ -2,7 +2,9 @@
 files.
 """
 
+import os
 import itertools
+import tempfile
 
 import license_handling
 
@@ -56,3 +58,15 @@ def file_has_correct_header(path, args, config):
             )
 
         return False
+
+
+def insert_header(path, header, linenum=0):
+    with open(path, "rt") as user_file:
+        with tempfile.mkstemp() as outfile:
+            for i, line in enumerate(user_file):
+                if i == linenum:
+                    outfile.write(header)
+
+                outfile.write(line)
+
+    os.replace(outfile.name, path)
