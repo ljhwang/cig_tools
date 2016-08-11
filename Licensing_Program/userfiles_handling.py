@@ -60,13 +60,13 @@ def file_has_correct_header(path, args, config):
         return False
 
 
-def insert_header(path, header, linenum=0):
+def insert_header(user_filepath, header, linenum=0):
     with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
-        with open(path, "rt") as user_file:
+        with open(user_filepath, "rt") as user_file:
             for i, line in enumerate(user_file):
                 if i == linenum:
                     outfile.write(header)
 
                 outfile.write(line)
 
-    os.replace(outfile.name, path)
+    os.replace(outfile.name, user_filepath)
