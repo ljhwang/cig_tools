@@ -70,3 +70,19 @@ def insert_header(user_filepath, header, linenum=0):
                 outfile.write(line)
 
     os.replace(outfile.name, user_filepath)
+
+
+def replace_header(user_filepath, header, linenum=0):
+    with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
+        with open(user_filepath, "rt") as user_file:
+            skip_lines = -1
+
+            for i, line in enumerate(user_file):
+                if i == linenum:
+                    outfile.write(header)
+                    skip_lines = len(header.splitlines()) + i
+
+                if i > skip_lines:
+                    outfile.write(line)
+
+    os.replace(outfile.name, user_filepath)
