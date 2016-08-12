@@ -1,11 +1,7 @@
 #! /usr/bin/env python3
 
 import argparse
-import functools
-import glob
-import json
-import itertools
-import operator
+import filecmp
 import os
 import pprint
 import re
