@@ -24,6 +24,22 @@ def get_license_list():
     })
 
 
+def get_license_files(license_name):
+    try:
+        license_fd = open(os.path.join(LICENSE_DIR, license_name + LICENSE_EXT))
+    except FileNotFoundError:
+        return (None, None)
+    else:
+        try:
+            header_fd = open(os.path.join(LICENSE_DIR,
+                                          license_name + LICENSE_EXT))
+        except FileNotFoundError:
+            header_fd = open(os.path.join(LICENSE_DIR,
+                                          DEFAULT_LICENSE + LICENSE_EXT))
+
+        return (license_fd, header_fd)
+
+
 def get_license_info(license_name):
     license_txtfile = open(
         os.path.join(LICENSE_DIR, license_name + LICENSE_EXT),
