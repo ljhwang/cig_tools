@@ -81,7 +81,8 @@ def format_header(header, path, config):
         begin, end = match.span()
         input_name = match.groups()
 
-        formatted_header += (match.string[:begin]
+        formatted_header += (
+            match.string[:begin]
             + str(config["LicenseParameters"][input_name])
         )
 
