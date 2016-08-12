@@ -89,18 +89,18 @@ def main_settings(args, config):
             indent = "  "
 
             if hasattr(d, "items"):
-                for k, v in sorted(d.items()):
-                    if doc.get(k):
-                        print("\n" + acc + "# " + str(doc.get(k)))
-                    print(acc + str(k) + ":")
+                for key, value in sorted(d.items()):
+                    if doc.get(key):
+                        print("\n" + acc + "# " + str(doc.get(key)))
+                    print(acc + str(key) + ":")
 
-                    if hasattr(v, "items"):
-                        dict_doc_print(v, doc, acc + indent)
-                    elif hasattr(v, "__iter__") and v != str(v):
-                        for x in v:
+                    if hasattr(value, "items"):
+                        dict_doc_print(value, doc, acc + indent)
+                    elif hasattr(value, "__iter__") and value != str(value):
+                        for x in value:
                             print(acc + indent + str(x))
                     else:
-                        print(acc + indent + str(v))
+                        print(acc + indent + str(value))
 
         config_doc = {
             "License": ("The license that will be used to generate the LICENSE"
