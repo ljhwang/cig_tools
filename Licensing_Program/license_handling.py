@@ -11,7 +11,7 @@ LICENSE_DIR = "Licenses"
 
 DEFAULT_LICENSE = "generic"
 
-LICENSE_EXT = "txt"
+LICENSE_EXT = ".txt"
 LICENSE_HEADER_SUFFIX = "_header"
 
 
