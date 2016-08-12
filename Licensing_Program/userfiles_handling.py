@@ -61,6 +61,9 @@ def file_has_correct_header(path, args, config):
 
 
 def insert_header(user_filepath, header, linenum=0):
+    """Inserts header text into file at `user_filepath` starting at line
+    `linenum`.
+    """
     with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
         with open(user_filepath, "rt") as user_file:
             for i, line in enumerate(user_file):
