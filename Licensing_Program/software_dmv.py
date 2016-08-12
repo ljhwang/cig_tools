@@ -75,12 +75,6 @@ def main_list(args, config):
         print(license)
 
 
-#def main_info(args):
-#    license = json.load(_license_dir + args.license)
-#
-#    license["name"]
-
-
 def main_settings(args, config):
     if args.info_level != "verbose":
         pprint.pprint(config, depth=2)
@@ -196,26 +190,6 @@ def create_main_parser():
         description="List supported licenses.",
     )
 
-    parser_info = subparsers.add_parser(
-        "info",
-        help="Show summary of license and necessary user parameters",
-        description="Show summary of license and necessary user parameters.",
-    )
-    parser_info.add_argument(
-        "license",
-        metavar="LICENSE",
-        help="License name",
-    )
-    parser_info.add_argument(
-        "-v",
-        "--verbose",
-        action="store_const",
-        const="verbose",
-        dest="info_level",
-        default="",
-        help="Show full license text instead of summary",
-    )
-
     parser_settings = subparsers.add_parser(
         "settings",
         help="Show current license settings for your project",
@@ -243,8 +217,6 @@ def main(args):
         pass
     elif args.command == "list":
         main_list(args, config)
-#    elif args.command == "info":
-#        main_info(args)
     elif args.command == "settings":
         main_settings(args, config)
 
