@@ -25,7 +25,7 @@ def main_check(args, config):
 
     if (not args.no_ignore) and config["IgnoredFiles"]:
         ignore_regex = "|".join(
-            ignore_to_regex(ignore_string)
+            config_handling.param_ignoredfiles_to_regex(ignore_string)
             for ignore_string
             in config["IgnoredFiles"]
         )
@@ -52,7 +52,7 @@ def main_choose(args, config):
                 print("ERROR: Parameter input not formatted properly")
                 exit(1)
 
-        license_fd, header_fd = get_license_files(args.license)
+        license_fd, header_fd = license_handling.get_license_files(args.license)
 
         try:
             same = filecmp.cmp(license_fd.name, "LICENSE", shallow=False)
