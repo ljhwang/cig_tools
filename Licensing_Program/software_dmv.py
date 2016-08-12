@@ -60,6 +60,8 @@ def main_choose(args, config):
             same = False
 
         if not same:
+            config["License"] = args.license
+
             with open("LICENSE", "wt") as project_license:
                 project_license.write(license_fd)
 
