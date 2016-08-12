@@ -76,6 +76,9 @@ def insert_header(user_filepath, header, linenum=0):
 
 
 def replace_header(user_filepath, header, linenum=0):
+    """Overwrites lines in file at `user_filepath` with header text starting at
+    line `linenum`.
+    """
     with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
         with open(user_filepath, "rt") as user_file:
             skip_lines = -1
