@@ -6,6 +6,7 @@ import json
 import os
 import re
 
+import licenses
 
 LICENSE_DIR = "Licenses"
 
