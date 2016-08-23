@@ -2,18 +2,11 @@
  in the software_dmv project.
 """
 
-import json
-import os
-import re
+import string
 
 import licenses
 
-LICENSE_DIR = "Licenses"
-
 DEFAULT_LICENSE = "generic"
-
-LICENSE_EXT = ".txt"
-LICENSE_HEADER_SUFFIX = "_header"
 
 
 def get_license_list():
