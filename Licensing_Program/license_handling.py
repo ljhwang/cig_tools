@@ -38,3 +38,16 @@ def get_license_parameters_list(license_name):
     ]
 
 
+def get_formatted_license(license_name, config, user_filepath):
+    """Return a dictionary containing the formatted text of the license and
+    header.
+    """
+    user_license = licenses.license_dict[license_name]
+
+    license_text = user_license.license.format(**config["LicenseParameters"])
+    header_text = user_license.header.format(**config["LicenseParameters"])
+
+    return {
+        "license_text" : license_text,
+        "header_text" : header_text,
+    }
