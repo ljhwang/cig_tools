@@ -22,35 +22,6 @@ def get_license_list():
     return sorted(licenses.license_dict.keys())
 
 
-def get_license_info(license_name):
-    license_txtfile = open(
-        os.path.join(LICENSE_DIR, license_name + LICENSE_EXT),
-        "rt",
-    )
-    license_json = json.load(
-        open(
-            os.path.join(LICENSE_DIR, license_name + ".json"),
-            "rt",
-        )
-    )
-
-    try:
-        header_txtfile = open(
-            os.path.join(LICENSE_DIR, license_name + "_header.txt"),
-            "rt",
-        )
-    except FileNotFoundError:
-        header_txtfile = open(
-            os.path.join(LICENSE_DIR, DEFAULT_LICENSE + LICENSE_HEADER_SUFFIX),
-            "rt",
-        )
-
-    license_json["fullText"] = str(license_txtfile)
-    license_json["headerText"] = str(header_txtfile)
-
-    return license_json
-
-
 def format_header(header, path, config):
     """Headers use double curly braces to describe required inputs.
     Inside a set of curly braces is the name of the input.
