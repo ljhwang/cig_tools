@@ -17,8 +17,8 @@ LICENSE_HEADER_SUFFIX = "_header"
 
 
 def get_license_list():
-"""Return a sorted list of supported license names.
-"""
+    """Return a sorted list of supported license names.
+    """
     return sorted(licenses.license_dict.keys())
 
 
