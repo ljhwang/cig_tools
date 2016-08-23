@@ -23,17 +23,22 @@ def _find_header_start_line(path):
 
 
 def file_has_correct_header(path, args, config):
-    license_info = license_handling.get_license_info(config)
-
+    """Return true if file designated by `path` has the correct header.
+    """
     linenum = _find_header_start_line(path)
 
     if linenum is not None:
         with open(path, "rt") as user_file:
             file_slice = itertools.islice(user_file, linenum, None)
 
-            header = license_handling.format_header(
-                license_info["Header"], path, config)
-            header_lines = (x + "\n" for x in header.splitlines())
+            formatted_text = license_handling.get_formatted_license(
+                config["License"], config, path
+            )
+
+            header_lines = (
+                x + "\n"
+                for x in formatted_text["header"].splitlines()
+            )
 
             nonmatching_lines = [
                 (header_line, file_line)
