@@ -22,6 +22,22 @@ def get_license_list():
     return sorted(licenses.license_dict.keys())
 
 
+def get_license_parameters_list(license_name):
+    """Return a list of parameter names required for the license text.
+    """
+    return [
+        name
+        for _, name, _, _ in string.Formatter().parse(
+            licenses.license_dict[license_name].license)
+        if name is not None
+    ] + [
+        name
+        for _, name, _, _ in string.Formatter().parse(
+            licenses.license_dict[license_name].header)
+        if name is not None
+    ]
+
+
 def format_header(header, path, config):
     """Headers use double curly braces to describe required inputs.
     Inside a set of curly braces is the name of the input.
