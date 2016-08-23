@@ -38,25 +38,3 @@ def get_license_parameters_list(license_name):
     ]
 
 
-def format_header(header, path, config):
-    """Headers use double curly braces to describe required inputs.
-    Inside a set of curly braces is the name of the input.
-    """
-    pattern = re.compile(r"{{\s*([a-zA-Z0-9_-]+)\s*}}")
-    match = pattern.search(header)
-    formatted_header = ""
-
-    while match:
-        begin, end = match.span()
-        input_name = match.groups()
-
-        formatted_header += (
-            match.string[:begin]
-            + str(config["LicenseParameters"][input_name])
-        )
-
-        match = pattern.search(match.string[end:])
-
-    formatted_header += match.string[end:]
-
-    return formatted_header
