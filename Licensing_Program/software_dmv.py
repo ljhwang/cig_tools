@@ -33,8 +33,13 @@ def main_check(args, config):
                      if not re.match(ignore_regex, file))
 
     for path in filepaths:
-        print(path)
-        #userfiles_handling.check_file(path, args, config)
+        if not userfiles_handling.file_has_correct_header(path, args, config):
+            if config.add_missing:
+                print("NOT adding header to {}.".format(path))
+                #userfiles_handling.insert_header()
+                #userfiles_handling.replace_header()
+            else:
+                print("{} has no/an incorrect header.".format(path))
 
 
 def main_choose(args, config):
