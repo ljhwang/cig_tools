@@ -12,6 +12,9 @@ import userfiles_handling
 
 
 def main_check(args, config):
+    """CLI program command: check
+    Check project files for license/header text.
+    """
     if args.files:
         filepaths = set(args.files)
     else:
@@ -35,6 +38,9 @@ def main_check(args, config):
 
 
 def main_choose(args, config):
+    """CLI program command: choose
+    Select or change a project license.
+    """
     if args.license in license_handling.get_license_list():
         def arg_to_parameters(string_list):
             return dict(pair.split(":")
@@ -67,11 +73,17 @@ def main_choose(args, config):
 
 
 def main_list(args, config):
+    """CLI program command: list
+    Output each supported license by name.
+    """
     for license in license_handling.get_license_list():
         print(license)
 
 
 def main_settings(args, config):
+    """CLI program command: settings
+    Display or edit project license configuration.
+    """
     if args.info_level != "verbose":
         pprint.pprint(config, depth=2)
     else:
@@ -103,6 +115,8 @@ def main_settings(args, config):
 
 
 def create_main_parser():
+    """Create CLI parser for this program.
+    """
     parser = argparse.ArgumentParser(
         description="Where you go to get your software license.",
     )
@@ -211,6 +225,9 @@ def create_main_parser():
 
 
 def main(args):
+    """Program entrypoint.
+    Calls requested CLI command.
+    """
     config = config_handling.load_project_config(args.info_level)
 
     if args.command == "check":
