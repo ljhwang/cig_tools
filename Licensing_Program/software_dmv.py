@@ -151,12 +151,6 @@ def create_main_parser():
         help="Choose a license to insert into your project",
         description="Choose a license to insert into your project.",
     )
-    parser_choose.add_argument(
-        "--no-apply",
-        action="store_false",
-        dest="apply_choice",
-        help="Write/update config file, but do not apply license to project",
-    )
 
     verbosity_group = parser_choose.add_mutually_exclusive_group()
 
@@ -177,6 +171,13 @@ def create_main_parser():
         dest="info_level",
         default="",
         help="Silence all non-error output",
+    )
+
+    parser_choose.add_argument(
+        "--no-apply",
+        action="store_false",
+        dest="apply_choice",
+        help="Write/update config file, but do not apply license to project",
     )
 
     parser_choose.add_argument(
