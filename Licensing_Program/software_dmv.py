@@ -59,18 +59,9 @@ def main_choose(args, config):
                 print("ERROR: Parameter input not formatted properly")
                 exit(1)
 
-        license_fd, header_fd = license_handling.get_license_files(args.license)
+        config["License"] = args.license
 
-        try:
-            same = filecmp.cmp(license_fd.name, "LICENSE", shallow=False)
-        except FileNotFoundError:
-            same = False
-
-        if not same:
-            config["License"] = args.license
-
-            with open("LICENSE", "wt") as project_license:
-                project_license.write(license_fd)
+        userfiles_handling.update_license(config)
 
     else:
         print(("{} is not a supported license. Please use the list command to"
