@@ -43,7 +43,7 @@ def get_formatted_license(license_name, config, user_filepath):
 
     header_lines = header_text.splitlines(keepends=True)
 
-    if config["CommentedFiles"]:
+    if "CommentedFiles" in config:
         matched_comment_formats = [
             regex
             for regex in sorted(config["CommentedFiles"])
