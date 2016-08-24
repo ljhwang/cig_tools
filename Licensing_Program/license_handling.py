@@ -32,7 +32,7 @@ def get_license_parameters_list(license_name):
     ]
 
 
-def get_formatted_license(license_name, config, user_filepath):
+def fill_in_license(license_name, config):
     """Return a dictionary containing the formatted text of the license and
     header.
     """
@@ -41,6 +41,16 @@ def get_formatted_license(license_name, config, user_filepath):
     license_text = user_license.license.format(**config["LicenseParameters"])
     header_text = user_license.header.format(**config["LicenseParameters"])
 
+    return {
+        "license_text" : license_text,
+        "header_text" : header_text,
+    }
+
+
+def comment_out_header(header_text, user_filepath, config):
+    """Add user's commenting syntax to each line of the header's text.
+    Commenting syntax is chosen by `user_filepath` matching a configured regex.
+    """
     header_lines = header_text.splitlines(keepends=True)
 
     if "CommentedFiles" in config:
@@ -79,7 +89,4 @@ def get_formatted_license(license_name, config, user_filepath):
                     for line in header_lines
                 ]
 
-    return {
-        "license_text" : license_text,
-        "header_lines" : header_lines,
-    }
+    return header_text = "".join(header_lines)
