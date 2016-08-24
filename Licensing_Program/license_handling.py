@@ -75,7 +75,7 @@ def get_formatted_license(license_name, config, user_filepath):
 
             else:  # elif "LineCommentStart" in comment_format:
                 header_lines = [
-                    comment_format["LIneCommentStart"] + line
+                    comment_format["LineCommentStart"] + line
                     for line in header_lines
                 ]
 
