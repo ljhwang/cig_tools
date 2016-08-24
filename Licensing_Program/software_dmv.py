@@ -72,8 +72,8 @@ def main_list(args, config):
     """CLI program command: list
     Output each supported license by name.
     """
-    for license in license_handling.get_license_list():
-        print(license)
+    for license_name in license_handling.get_license_list():
+        print(license_name)
 
 
 def main_settings(args, config):
