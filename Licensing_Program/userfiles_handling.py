@@ -9,6 +9,7 @@ import tempfile
 import license_handling
 
 
+HEADER_SIGNAL_STRING = "Copyright"
 HEADER_IN_FIRST_N_LINES = 20
 
 
@@ -16,7 +17,7 @@ def _find_header_start_line(path):
     with open(path, "rt") as user_file:
         fileslice = itertools.islice(user_file, HEADER_IN_FIRST_N_LINES)
         for linenum, line in enumerate(fileslice):
-            if "Copyright".casefold() in line.casefold():
+            if HEADER_SIGNAL_STRING.casefold() in line.casefold():
                 return linenum
 
     return None
