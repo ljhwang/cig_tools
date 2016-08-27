@@ -66,35 +66,19 @@ def file_has_correct_header(path, args, config):
         return False
 
 
-def insert_header(user_filepath, header, linenum=0):
-    """Inserts header text into file at `user_filepath` starting at line
-    `linenum`.
+def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
+    """Insert header into `user_filepath` starting at line `insert_linenum`
+    (zero based). Removes `cut_lines` amount of lines after the header.
+    `cut_lines` is useful for cases where existing header lines need to be
+    removed.
     """
     with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
         with open(user_filepath, "rt") as user_file:
             for i, line in enumerate(user_file):
-                if i == linenum:
-                    outfile.write(header)
+                if i == insert_linenum:
+                    outfile.write(header_text)
 
-                outfile.write(line)
-
-    os.replace(outfile.name, user_filepath)
-
-
-def replace_header(user_filepath, header, linenum=0):
-    """Overwrites lines in file at `user_filepath` with header text starting at
-    line `linenum`.
-    """
-    with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
-        with open(user_filepath, "rt") as user_file:
-            skip_lines = -1
-
-            for i, line in enumerate(user_file):
-                if i == linenum:
-                    outfile.write(header)
-                    skip_lines = len(header.splitlines()) + i
-
-                if i > skip_lines:
+                if i < insert_linenum or i >= insert_linenum + cut_lines:
                     outfile.write(line)
 
     os.replace(outfile.name, user_filepath)
