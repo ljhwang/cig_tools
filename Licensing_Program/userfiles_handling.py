@@ -72,6 +72,14 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
     `cut_lines` is useful for cases where existing header lines need to be
     removed.
     """
+    if insert_linenum > HEADER_IN_FIRST_N_LINES:
+        raise ValueError(
+            (
+                "Header should not be written at line {}. It should be placed"
+                " near the top of the file."
+            ).format(insert_linenum)
+        )
+
     with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
         with open(user_filepath, "rt") as user_file:
             for i, line in enumerate(user_file):
