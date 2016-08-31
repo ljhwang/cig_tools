@@ -89,4 +89,5 @@ def comment_out_header(header_text, user_filepath, config):
                     for line in header_lines
                 ]
 
-    return header_text = "".join(header_lines)
+    header_text = "".join(header_lines)
+    return header_text
