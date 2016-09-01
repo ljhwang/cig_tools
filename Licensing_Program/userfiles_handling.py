@@ -26,39 +26,44 @@ def _find_header_start_line(path):
     return None
 
 
-def file_has_correct_header(path, args, config):
+def file_has_correct_header(user_filepath, args, config):
     """Return true if file designated by `path` has the correct header.
     """
-    linenum = _find_header_start_line(path)
+    linenum = _find_header_start_line(user_filepath)
 
     if linenum is not None:
-        with open(path, "rt") as user_file:
-            file_slice = itertools.islice(user_file, linenum, None)
+        with open(user_filepath, "rt") as user_file:
+            header_text = license_handling.fill_in_license(
+                config["License"], config,
+            )["header_text"]
 
-            formatted_text = license_handling.get_formatted_license(
-                config["License"], config, path
+            header_text = license_handling.comment_out_header(
+                header_text, user_filepath, config,
             )
 
-            header_lines = (
-                x + "\n"
-                for x in formatted_text["header"].splitlines()
-            )
+            header_lines = header_text.splitlines(keepends=True)
 
-            nonmatching_lines = [
-                (header_line, file_line)
-                for header_line, file_line
-                in zip(header_lines, file_slice)
-                if header_line != file_line
+            user_file_lines = [
+                line
+                for line in itertools.islice(
+                    user_file,
+                    linenum,
+                    linenum + len(header_lines),
+                )
             ]
 
-            if args.info_level == "verbose" and nonmatching_lines:
+            mismatched_lines = _compare_header_lines(
+                header_lines, user_file_lines
+            )
+
+            if args.info_level == "verbose" and mismatched_lines:
                 print(
                     ("In file {}: there are {} lines that do not match the"
-                     " expected license header.").format(path,
-                                                         len(nonmatching_lines))
+                     " expected license header.").format(user_filepath,
+                                                         mismatched_lines)
                 )
 
-            return not bool(nonmatching_lines)
+            return not bool(mismatched_lines)
 
     else:
         if args.info_level == "verbose":
