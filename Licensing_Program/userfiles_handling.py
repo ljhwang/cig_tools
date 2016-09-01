@@ -14,8 +14,11 @@ HEADER_IN_FIRST_N_LINES = 20
 
 
 def _find_header_start_line(path):
-    with open(path, "rt") as user_file:
-        fileslice = itertools.islice(user_file, HEADER_IN_FIRST_N_LINES)
+    """Find line number of line that holds the token string that signals the
+    start of the license header.
+    """
+    with open(path, "rt") as ro_file:
+        fileslice = itertools.islice(ro_file, HEADER_IN_FIRST_N_LINES)
         for linenum, line in enumerate(fileslice):
             if HEADER_SIGNAL_STRING.casefold() in line.casefold():
                 return linenum
