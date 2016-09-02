@@ -68,7 +68,8 @@ def file_has_correct_header(user_filepath, args, config):
     else:
         if args.info_level == "verbose":
             print(
-                "File {} does not appear to have a license header.".format(path)
+                "File {} does not appear to have a license header.".format(
+                    user_filepath)
             )
 
         return False
