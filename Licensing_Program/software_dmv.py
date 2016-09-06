@@ -32,14 +32,28 @@ def main_check(args, config):
         filepaths = (file for file in filepaths
                      if not re.match(ignore_regex, file))
 
+    if filepaths:
+        text_dict = license_handling.fill_in_license(
+            config["License"], config
+        )
+
+        license_text = text_dict["license_text"]
+        header_text = text_dict["header_text"]
+
     for path in filepaths:
         if not userfiles_handling.file_has_correct_header(path, args, config):
             if config.add_missing:
-                print("NOT adding header to {}.".format(path))
-                #userfiles_handling.insert_header()
-                #userfiles_handling.replace_header()
+                print("Adding header to {}.".format(path))
+
+                commented_header_text = license_handling.comment_out_header(
+                    header_text, path, config
+                )
+
+                userfiles_handling.write_header(
+                    commented_header_text, path, config["insertAtLine"]
+                )
             else:
-                print("{} has no/an incorrect header.".format(path))
+                print("{} is missing or has an incorrect header.".format(path))
 
 
 def main_choose(args, config):
