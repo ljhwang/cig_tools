@@ -242,9 +242,9 @@ def main(args):
     config = config_handling.load_project_config(args.info_level)
 
     if args.command == "check":
-        pass
+        main_check(args, config)
     elif args.command == "choose":
-        pass
+        main_choose(args, config)
     elif args.command == "list":
         main_list(args, config)
     elif args.command == "settings":
