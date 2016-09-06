@@ -26,6 +26,17 @@ def _find_header_start_line(path):
     return None
 
 
+def _compare_header_lines(correct_lines, test_lines):
+    """Return a list of `test_lines` that do not match `correct_lines` at the
+    same index.
+    """
+    return [
+        t_line
+        for c_line, t_line in zip(correct_lines, test_lines)
+        if c_line != t_line
+    ]
+
+
 def file_has_correct_header(user_filepath, args, config):
     """Return true if file designated by `path` has the correct header.
     """
