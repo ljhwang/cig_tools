@@ -21,6 +21,10 @@ CONFIG_SCHEMA = {
             "additionalProperties": False,
             "patternProperties": {
                 "^.+$": {
+                    "insertAtLine": {
+                        "maximum": HEADER_IN_FIRST_N_LINES,
+                        "type": "integer",
+                    },
                     "oneOf": [
                         {
                             "properties": {
