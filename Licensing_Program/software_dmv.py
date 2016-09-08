@@ -77,8 +77,9 @@ def main_choose(args, config):
         userfiles_handling.update_license(config)
 
     else:
-        print(("{} is not a supported license. Please use the list command to"
-               " see a list of supported licenses.").format(args.license))
+        print(("WARNING: {} is not a supported license. Please use the list"
+               " command to see a list of supported licenses."
+              ).format(args.license))
 
 
 def main_list(args, config):
