@@ -17,7 +17,7 @@ def main_check(args, config):
     if args.files:
         filepaths = set(args.files)
     else:
-        filepaths = (os.path.join(cwd, file)
+        filepaths = (os.path.relpath(os.path.join(cwd, file))
                      for cwd, dirs, files in os.walk(".")
                      for file in files)
 
