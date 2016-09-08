@@ -159,6 +159,27 @@ def create_main_parser():
         help="Check these files only",
     )
 
+    verbosity_group = parser_check.add_mutually_exclusive_group()
+
+    verbosity_group.add_argument(
+        "-v",
+        "--verbose",
+        action="store_const",
+        const="verbose",
+        dest="info_level",
+        default="",
+        help="Output more information about executed command",
+    )
+    verbosity_group.add_argument(
+        "-q",
+        "--quiet",
+        action="store_const",
+        const="quiet",
+        dest="info_level",
+        default="",
+        help="Silence all non-error output",
+    )
+
     parser_choose = subparsers.add_parser(
         "choose",
         help="Choose a license to insert into your project",
