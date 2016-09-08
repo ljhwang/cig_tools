@@ -65,7 +65,9 @@ def comment_out_header(header_text, user_filepath, config):
                 "WARNING: {} matches more than one commenting format.".format(
                     user_filepath)
             )
-            print("List of matches: {}".format(matched_comment_formats))
+            print("  List of matches:")
+            for filepattern in matched_comment_formats:
+                print("    " + filepattern)
 
         if matched_comment_formats:
             comment_format = (
