@@ -57,7 +57,7 @@ def main_check(args, config):
                     print(path)
                 else:
                     print(
-                        "{} is missing or has an incorrect header.".format(path)
+                        "{} has an incorrect or missing header.".format(path)
                     )
 
 
