@@ -41,8 +41,9 @@ def main_check(args, config):
 
     for path in filepaths:
         if not userfiles_handling.file_has_correct_header(path, args, config):
-            if config.add_missing:
-                print("Adding header to {}.".format(path))
+            if args.add_missing:
+                if args.info_level == "verbose":
+                    print("Adding header to {}.".format(path))
 
                 commented_header_text = license_handling.comment_out_header(
                     header_text, path, config
@@ -52,7 +53,12 @@ def main_check(args, config):
                     commented_header_text, path, config["insertAtLine"]
                 )
             else:
-                print("{} is missing or has an incorrect header.".format(path))
+                if args.info_level == "quiet":
+                    print(path)
+                else:
+                    print(
+                        "{} is missing or has an incorrect header.".format(path)
+                    )
 
 
 def main_choose(args, config):
