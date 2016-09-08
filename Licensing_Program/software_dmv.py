@@ -46,12 +46,19 @@ def main_check(args, config):
                 if args.info_level == "verbose":
                     print("Adding header to {}.".format(path))
 
-                commented_header_text = license_handling.comment_out_header(
-                    header_text, path, config
-                )
+                commented_header_text, comment_format = \
+                    license_handling.comment_out_header(
+                        header_text, path, config
+                    )
 
                 userfiles_handling.write_header(
-                    commented_header_text, path, config["insertAtLine"]
+                    commented_header_text,
+                    path,
+                    (
+                        comment_format.get("InsertAtLine", 0)
+                        if comment_format
+                        else 0
+                    ),
                 )
             else:
                 if args.info_level == "quiet":

@@ -95,5 +95,10 @@ def comment_out_header(header_text, user_filepath, config):
                     for line in header_lines
                 ]
 
+    if matched_comment_formats:
+        comment_format = config["CommentedFiles"][matched_comment_formats[0]]
+    else:
+        comment_format = None
+
     header_text = "".join(header_lines)
-    return header_text
+    return header_text, comment_format
