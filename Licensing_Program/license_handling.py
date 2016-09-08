@@ -57,7 +57,7 @@ def comment_out_header(header_text, user_filepath, config):
     if "CommentedFiles" in config:
         matched_comment_formats = [
             regex
-            for regex in sorted(config["CommentedFiles"])
+            for regex in config["CommentedFiles"]
             if re.match(
                 config_handling.param_ignoredfiles_to_regex(regex),
                 user_filepath
