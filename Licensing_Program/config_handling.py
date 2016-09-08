@@ -123,10 +123,26 @@ def antpattern_to_regex(pattern):
         pattern,
     )
 
-    # the name for the directory wildcard is '**' with no additional chars.
+    # patterns that begin with **/ match any amount of leading directories.
     pattern = re.sub(
-        r"(/|^)\*\*+(/|$)",
-        r"\1.*?\2",
+        r"^\*\*/",
+        r"(.*?/|/?)",
+        pattern,
+    )
+
+    # patterns that end with /** match all files under any directories that
+    # match the earlier part of the pattern.
+    pattern = re.sub(
+        r"/\*\*$",
+        r"/.*?",
+        pattern,
+    )
+
+    # patterns that contain /**/ match any amount of infixed directories
+    # including none.
+    pattern = re.sub(
+        r"/\*\*/",
+        r"(/|/.*?/)",
         pattern,
     )
 
