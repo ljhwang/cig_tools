@@ -40,7 +40,17 @@ def _compare_header_lines(correct_lines, test_lines):
 def file_has_correct_header(user_filepath, args, config):
     """Return true if file designated by `path` has the correct header.
     """
-    linenum = _find_header_start_line(user_filepath)
+    try:
+        linenum = _find_header_start_line(user_filepath)
+    except UnicodeDecodeError:
+        if args.info_level == "verbose":
+            print(
+                "File {} is not standard utf-8. It may be a binary.".format(
+                    user_filepath
+                )
+            )
+
+        return False
 
     if linenum is not None:
         with open(user_filepath, "rt") as user_file:
