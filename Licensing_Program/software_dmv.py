@@ -19,7 +19,8 @@ def main_check(args, config):
     else:
         filepaths = (os.path.relpath(os.path.join(cwd, file))
                      for cwd, dirs, files in os.walk(".")
-                     for file in files)
+                     for file in files
+                     if file != config_handling.CONFIG_FILENAME)
 
     if (not args.no_ignore) and config["IgnoredFiles"]:
         ignore_regex = "|".join(
