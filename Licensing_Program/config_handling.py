@@ -13,6 +13,8 @@ try:
 except ImportError:
     jsonschema = None
 
+import userfiles_handling
+
 
 CONFIG_FILENAME = ".licensing.json"
 
@@ -23,7 +25,7 @@ CONFIG_SCHEMA = {
             "patternProperties": {
                 "^.+$": {
                     "insertAtLine": {
-                        "maximum": HEADER_IN_FIRST_N_LINES,
+                        "maximum": userfiles_handling.HEADER_IN_FIRST_N_LINES,
                         "type": "integer",
                     },
                     "oneOf": [
