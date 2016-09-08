@@ -100,7 +100,7 @@ def main_settings(args, config):
             indent = "  "
 
             if hasattr(d, "items"):
-                for key, value in sorted(d.items()):
+                for key, value in d.items():
                     if doc.get(key):
                         print("\n" + acc + "# " + str(doc.get(key)))
                     print(acc + str(key) + ":")

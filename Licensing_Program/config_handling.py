@@ -2,6 +2,7 @@
 configuration.
 """
 
+import collections
 import json
 import os.path
 import re
@@ -155,7 +156,10 @@ def load_project_config(cwd=".", info_level=""):
     """Parses the project config file in 'cwd'. If the 'jsonschema' module is
     available, the config file is checked for data errors.
     """
-    project_config = json.load(open(os.path.join(cwd, CONFIG_FILENAME), "rt"))
+    project_config = json.load(
+        open(os.path.join(cwd, CONFIG_FILENAME), "rt"),
+        object_pairs_hook=collections.OrderedDict,
+    )
 
     if jsonschema:
         jsonschema.validate(project_config, CONFIG_SCHEMA)
