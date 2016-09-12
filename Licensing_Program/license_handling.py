@@ -79,14 +79,15 @@ def comment_out_header(header_text, user_filepath, config):
             )
 
             if "BlockComments" in comment_format:
+                block_format = comment_format["BlockComments"]
+
                 header_lines = [
-                    comment_format["BlockComments"]["BlockStart"]
-                    + header_lines[0]
+                    block_format["BlockStart"] + header_lines[0]
                 ] + [
-                    comment_format["BlockComments"].get("BlockLine", "") + line
+                    block_format.get("BlockLine", "") + line
                     for line in header_lines[1:]
                 ] + [
-                    comment_format["BlockComments"]["BlockEnd"] + "\n"
+                    block_format["BlockEnd"] + "\n"
                 ]
 
             else:  # elif "LineCommentStart" in comment_format:
