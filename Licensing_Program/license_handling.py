@@ -51,6 +51,7 @@ def fill_in_license(license_name, config):
 def comment_out_header(header_text, user_filepath, config):
     """Add user's commenting syntax to each line of the header's text.
     Commenting syntax is chosen by `user_filepath` matching a configured regex.
+    Comment tokens added to empty lines will be stripped of trailing whitespace.
     """
     header_lines = header_text.splitlines(keepends=True)
 
@@ -85,6 +86,8 @@ def comment_out_header(header_text, user_filepath, config):
                     block_format["BlockStart"] + header_lines[0]
                 ] + [
                     block_format.get("BlockLine", "") + line
+                    if not line.isspace()
+                    else block_format.get("BlockLine", "").rstrip() + line
                     for line in header_lines[1:]
                 ] + [
                     block_format["BlockEnd"] + "\n"
@@ -93,6 +96,8 @@ def comment_out_header(header_text, user_filepath, config):
             else:  # elif "LineCommentStart" in comment_format:
                 header_lines = [
                     comment_format["LineCommentStart"] + line
+                    if not line.isspace()
+                    else comment_format["LineCommentStart"].rstrip() + line
                     for line in header_lines
                 ]
 
