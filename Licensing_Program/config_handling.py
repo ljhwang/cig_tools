@@ -140,8 +140,7 @@ def antpattern_to_regex(pattern):
         pattern,
     )
 
-    # patterns that contain /**/ match any amount of infixed directories
-    # including none.
+    # patterns that contain /**/ match zero or more infix directories.
     pattern = re.sub(
         r"/\*\*/",
         r"(/|/.*?/)",
