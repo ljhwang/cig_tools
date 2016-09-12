@@ -159,7 +159,9 @@ def antpattern_to_regex(pattern):
 
 
 def param_ignoredfiles_to_regex(ignore_string):
-    """Takes a config IgnoredFiles item and converts it into a regex string.
+    """Converts a configuration pattern for 'IgnoredFiles' to a regex string.
+    A pattern can have a 're:' prefix to denote it is already a regex or a
+    'ant:' prefix to explicitly show it is an ant pattern.
     """
     if ignore_string.startswith("re:"):
         return ignore_string.lstrip("re:")
