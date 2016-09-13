@@ -110,13 +110,21 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
             ).format(insert_linenum)
         )
 
-    with tempfile.NamedTemporaryFile(mode="wt", delete=False) as outfile:
+    try:
         with open(user_filepath, "rt") as user_file:
-            for i, line in enumerate(user_file):
-                if i == insert_linenum:
-                    outfile.write(header_text)
+            with tempfile.NamedTemporaryFile(
+                mode="wt",
+                    delete=False) as outfile:
+                for i, line in enumerate(user_file):
+                    if i == insert_linenum:
+                        outfile.write(header_text)
 
-                if i < insert_linenum or i >= insert_linenum + cut_lines:
-                    outfile.write(line)
+                    if i < insert_linenum or i >= insert_linenum + cut_lines:
+                        outfile.write(line)
 
-    os.replace(outfile.name, user_filepath)
+        os.replace(outfile.name, user_filepath)
+    except UnicodeDecodeError:
+        print((
+            "WARNING: File {} is not standard unicode and has been skipped. It"
+            " may be a binary."
+        ).format(user_filepath))
