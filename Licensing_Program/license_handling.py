@@ -82,6 +82,17 @@ def comment_out_header(header_text, user_filepath, config):
             if "BlockComments" in comment_format:
                 block_format = comment_format["BlockComments"]
 
+                if block_format["BlockEnd"] in header_text:
+                    print(
+                        "WARNING: the license header contains the comment token"
+                        " used to indicate a block comment end."
+                    )
+                elif block_format["BlockEnd"].strip() in header_text:
+                    print(
+                        "WARNING: the license header contains a whitespace-"
+                        "stripped version of the block comment end token."
+                    )
+
                 header_lines = [
                     block_format["BlockStart"] + header_lines[0]
                 ] + [
