@@ -1,4 +1,4 @@
-"""Module for creating parser command, 'check-project'.
+"""Submodule for creating parser command 'check-project'.
 """
 
 def add_command(subparser):
@@ -8,26 +8,26 @@ def add_command(subparser):
     parser_check = subparser.add_parser(
         "check-project",
         aliases=["check"],
-        help="Check all project files for licensing information",
+        help="check all project files for licensing information",
         description="Check all project files for licensing information.",
     )
     parser_check.add_argument(
         "--no-ignore",
         action="store_true",
-        help="Also check files that are set to be ignored",
+        help="also check files that are set to be ignored",
     )
     parser_check.add_argument(
         "-a",
         "--add-missing",
         action="store_true",
-        help="Add project license to files that fail the check",
+        help="add project license to files that fail the check",
     )
     parser_check.add_argument(
         "-f",
         "--files",
         metavar="FILE",
         nargs="+",
-        help="Check these files only",
+        help="check these files only",
     )
 
     return subparser
