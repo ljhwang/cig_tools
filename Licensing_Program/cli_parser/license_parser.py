@@ -20,6 +20,7 @@ def add_command(subparser):
     parser_license.add_argument(
         "license",
         metavar="LICENSE",
+        nargs="?",
         dest="license_name",
         help="list information about the given license",
     )
