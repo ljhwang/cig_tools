@@ -3,6 +3,7 @@
 
 import argparse
 
+import cli_parser.check_parser
 
 def create_main_parser():
     """Create CLI parser for this program.
@@ -39,29 +40,7 @@ def create_main_parser():
     )
     subparsers.required = True
 
-    parser_check = subparsers.add_parser(
-        "check",
-        help="Check all project files for licensing information",
-        description="Check all project files for licensing information.",
-    )
-    parser_check.add_argument(
-        "--no-ignore",
-        action="store_true",
-        help="Also check files that are set to be ignored",
-    )
-    parser_check.add_argument(
-        "-a",
-        "--add-missing",
-        action="store_true",
-        help="Add project license to files that fail the check",
-    )
-    parser_check.add_argument(
-        "-f",
-        "--files",
-        metavar="FILE",
-        nargs="+",
-        help="Check these files only",
-    )
+    subparsers = cli_parser.check_parser.add_command(subparsers)
 
     parser_choose = subparsers.add_parser(
         "choose",
