@@ -7,7 +7,7 @@ def add_command(subparser):
 
     parser_check = subparser.add_parser(
         "check-project",
-        "check",
+        aliases=["check"],
         help="Check all project files for licensing information",
         description="Check all project files for licensing information.",
     )
