@@ -1,4 +1,4 @@
-"""Create main parser for software_dmv program.
+"""Module for creating main parser for software_dmv program.
 """
 
 import argparse
@@ -7,6 +7,7 @@ import argparse
 def create_main_parser():
     """Create CLI parser for this program.
     """
+
     parser = argparse.ArgumentParser(
         description="Where you go to get your software license.",
     )
