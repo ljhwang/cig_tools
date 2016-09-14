@@ -1,11 +1,12 @@
-"""Module for creating parser command, 'check'.
+"""Module for creating parser command, 'check-project'.
 """
 
 def add_command(subparser):
-    """Add 'check' command to a subparser.
+    """Add 'check-project' command to a subparser.
     """
 
     parser_check = subparser.add_parser(
+        "check-project",
         "check",
         help="Check all project files for licensing information",
         description="Check all project files for licensing information.",
