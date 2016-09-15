@@ -6,7 +6,7 @@ import argparse
 import cli_parser.check_parser
 
 def create_main_parser():
-    """Create CLI parser for this program.
+    """Creates main parser for the commandline interface.
     """
 
     parser = argparse.ArgumentParser(
