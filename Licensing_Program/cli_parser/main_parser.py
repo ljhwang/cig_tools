@@ -20,18 +20,18 @@ def create_main_parser():
         "--verbose",
         action="store_const",
         const="verbose",
-        dest="info_level",
+        dest="verbosity",
         default="",
-        help="Output more information about executed command",
+        help="output more information about executed command",
     )
     verbosity_group.add_argument(
         "-q",
         "--quiet",
         action="store_const",
         const="quiet",
-        dest="info_level",
+        dest="verbosity",
         default="",
-        help="Silence all non-error output",
+        help="silence all non-error output",
     )
 
     subparsers = parser.add_subparsers(
