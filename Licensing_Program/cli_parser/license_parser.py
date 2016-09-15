@@ -18,3 +18,5 @@ def add_command(subparser):
         dest="license_name",
         help="list information about the given license",
     )
+
+    return subparser

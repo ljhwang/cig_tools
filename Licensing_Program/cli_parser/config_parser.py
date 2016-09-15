@@ -12,3 +12,5 @@ def add_command(subparser):
                      " project."),
     )
 # TODO: figure out config features/options
+
+    return subparser
