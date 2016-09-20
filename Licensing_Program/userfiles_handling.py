@@ -58,8 +58,8 @@ def file_has_correct_header(user_filepath, args, config):
                 config["License"], config,
             )["header_text"]
 
-            header_text = license_handling.comment_out_header(
-                header_text, user_filepath, config,
+            header_text, comment_format = license_handling.comment_out_header(
+                header_text, user_filepath, args, config,
             )
 
             header_lines = header_text.splitlines(keepends=True)
