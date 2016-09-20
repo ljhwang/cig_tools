@@ -107,7 +107,7 @@ def comment_out_header(header_text, user_filepath, args, config):
             else:  # elif "LineCommentStart" in comment_format:
                 header_lines = [
                     comment_format["LineCommentStart"] + line
-                    if not line.isspace()
+                    if line != "\n"
                     else comment_format["LineCommentStart"].rstrip() + line
                     for line in header_lines
                 ]
