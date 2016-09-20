@@ -48,7 +48,7 @@ def main_check(args, config):
 
                 commented_header_text, comment_format = \
                     license_handling.comment_out_header(
-                        header_text, path, config
+                        header_text, path, args, config
                     )
 
                 userfiles_handling.write_header(

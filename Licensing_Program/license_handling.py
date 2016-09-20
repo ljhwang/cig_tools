@@ -48,7 +48,7 @@ def fill_in_license(license_name, config):
     }
 
 
-def comment_out_header(header_text, user_filepath, config):
+def comment_out_header(header_text, user_filepath, args, config):
     """Add user's commenting syntax to each line of the header's text.
     Commenting syntax is chosen by `user_filepath` matching a configured regex.
     Comment tokens added to empty lines will be stripped of trailing whitespace.
@@ -65,7 +65,7 @@ def comment_out_header(header_text, user_filepath, config):
             )
         ]
 
-        if len(matched_comment_formats) > 1:
+        if len(matched_comment_formats) > 1 and args.info_level == "verbose":
             print((
                 "WARNING: {} matches more than one commenting format. Using"
                 " first match."
