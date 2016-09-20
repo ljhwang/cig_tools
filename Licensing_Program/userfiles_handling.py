@@ -114,7 +114,7 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
         with open(user_filepath, "rt") as user_file:
             with tempfile.NamedTemporaryFile(
                 mode="wt",
-                    delete=False) as outfile:
+                delete=False) as outfile:
                 for i, line in enumerate(user_file):
                     if i == insert_linenum:
                         outfile.write(header_text)
