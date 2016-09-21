@@ -4,6 +4,7 @@ files.
 
 import os
 import itertools
+import re
 import tempfile
 
 import license_handling
@@ -128,3 +129,37 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
             "WARNING: File {} is not standard unicode and has been skipped. It"
             " may be a binary."
         ).format(user_filepath))
+
+
+def commentformat_userfile_pairing(userproject_dir, config):
+    """Returns an iterator of tuples of comment patterns and file paths.
+    """
+    userfile_iter = iter(
+        os.path.relpath(os.path.join(cwd, file))
+        for cwd, dirs, files in os.walk(userproject_dir)
+        for file in files
+    )
+
+    ignoredfiles_filter_iter = iter(
+        userfile_path
+        for userfile_path in userfile_iter
+        if not any(
+            re.match(ignore_pattern, userfile_path)
+            for ignore_pattern in config["IgnoredFiles"]
+        )
+    )
+
+    pairing_iter = iter(
+        tuple(
+            next(
+                comment_pattern
+                for comment_pattern in config["CommentedFiles"]
+                if re.match(comment_pattern, userfile_path),
+                None
+            ),
+            userfile_path
+        )
+        for userfile_path in ignoredfiles_filter_iter
+    )
+
+    return pairing_iter
