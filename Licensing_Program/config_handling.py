@@ -36,65 +36,65 @@ CONFIG_SCHEMA = {
                                 "BlockComments": {
                                     "properties": {
                                         "BlockEnd": {
-                                            "type": "string"
+                                            "type": "string",
                                         },
                                         "BlockLine": {
                                             "type": "string",
-                                            "default": ""
+                                            "default": "",
                                         },
                                         "BlockStart": {
-                                            "type": "string"
-                                        }
+                                            "type": "string",
+                                        },
                                     },
                                     "required": [
                                         "BlockStart",
-                                        "BlockEnd"
+                                        "BlockEnd",
                                     ],
-                                    "type": "object"
-                                }
+                                    "type": "object",
+                                },
                             },
                             "required": [
-                                "BlockComments"
+                                "BlockComments",
                             ],
-                            "type": "object"
+                            "type": "object",
                         },
                         {
                             "properties": {
                                 "LineCommentStart": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                },
                             },
                             "required": [
-                                "LineCommentStart"
+                                "LineCommentStart",
                             ],
-                            "type": "object"
-                        }
-                    ]
-                }
+                            "type": "object",
+                        },
+                    ],
+                },
             },
-            "type": "object"
+            "type": "object",
         },
         "IgnoredFiles": {
             "items": {
-                "type": "string"
+                "type": "string",
             },
-            "type": "array"
+            "type": "array",
         },
         "License": {
-            "type": "string"
+            "type": "string",
         },
         "LicenseParameters": {
             "additionalProperties": False,
             "patternProperties": {
-                "^[a-zA-Z0-9_-]+$": {}
+                "^[a-zA-Z0-9_-]+$": {},
             },
-            "type": "object"
-        }
+            "type": "object",
+        },
     },
     "required": [
-        "License"
+        "License",
     ],
-    "type": "object"
+    "type": "object",
 }
 
 CONFIG_DEFAULT = {
