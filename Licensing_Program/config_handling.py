@@ -27,6 +27,8 @@ CONFIG_SCHEMA = {
                     "insertAtLine": {
                         "maximum": userfiles_handling.HEADER_IN_FIRST_N_LINES,
                         "type": "integer",
+                        "minimum": 0,
+                        "default": 0
                     },
                     "oneOf": [
                         {
@@ -37,7 +39,8 @@ CONFIG_SCHEMA = {
                                             "type": "string"
                                         },
                                         "BlockLine": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "default": ""
                                         },
                                         "BlockStart": {
                                             "type": "string"
