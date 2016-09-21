@@ -152,9 +152,11 @@ def commentformat_userfile_pairing(userproject_dir, config):
     pairing_iter = iter(
         tuple(
             next(
-                comment_pattern
-                for comment_pattern in config["CommentedFiles"]
-                if re.match(comment_pattern, userfile_path),
+                iter(
+                    comment_pattern
+                    for comment_pattern in config["CommentedFiles"]
+                    if re.match(comment_pattern, userfile_path)
+                ),
                 None
             ),
             userfile_path
