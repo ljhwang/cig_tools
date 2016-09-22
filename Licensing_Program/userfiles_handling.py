@@ -131,18 +131,23 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
         ).format(user_filepath))
 
 
-def commentformat_userfile_pairing(userproject_dir, config):
-    """Returns an iterator of tuples of comment patterns and file paths.
+def userfile_iter(userproject_dir):
+    """Returns an iterator of relative* filenames of all user project files.
+    [*]Relative to the project's root directory.
     """
-    userfile_iter = iter(
+    return iter(
         os.path.relpath(os.path.join(cwd, file))
         for cwd, dirs, files in os.walk(userproject_dir)
         for file in files
     )
 
+
+def commentformat_userfile_pairing(userfile_paths, config):
+    """Returns an iterator of tuples of comment patterns and file paths.
+    """
     ignoredfiles_filter_iter = iter(
         userfile_path
-        for userfile_path in userfile_iter
+        for userfile_path in userfile_paths
         if not any(
             re.match(ignore_pattern, userfile_path)
             for ignore_pattern in config["IgnoredFiles"]
