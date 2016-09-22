@@ -141,10 +141,10 @@ def userfile_iter(userproject_dir):
     )
 
 
-def commentformat_userfile_pairing(userfile_paths, config):
-    """Returns an iterator of tuples of comment patterns and file paths.
+def remove_ignored_userfiles(userfile_paths, config):
+    """Returns an iterator of filepaths with ignored files filtered out.
     """
-    ignoredfiles_filter_iter = iter(
+    return iter(
         userfile_path
         for userfile_path in userfile_paths
         if not any(
@@ -153,7 +153,11 @@ def commentformat_userfile_pairing(userfile_paths, config):
         )
     )
 
-    pairing_iter = iter(
+
+def commentformat_userfile_pairing(userfile_paths, config):
+    """Returns an iterator of tuples of comment patterns and file paths.
+    """
+    return iter(
         tuple(
             next(
                 iter(
@@ -165,7 +169,5 @@ def commentformat_userfile_pairing(userfile_paths, config):
             ),
             userfile_path
         )
-        for userfile_path in ignoredfiles_filter_iter
+        for userfile_path in userfile_paths
     )
-
-    return pairing_iter
