@@ -132,8 +132,7 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
 
 
 def userfile_iter(userproject_dir):
-    """Returns an iterator of relative* filenames of all user project files.
-    [*]Relative to the project's root directory.
+    """Returns an iterator of relative file paths of all user project files.
     """
     return iter(
         os.path.relpath(os.path.join(cwd, file))
