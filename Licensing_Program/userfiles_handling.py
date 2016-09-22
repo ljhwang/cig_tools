@@ -131,6 +131,18 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
         ).format(user_filepath))
 
 
+def sanitize_path(path, cwd):
+    """Returns a sanitized path relative to 'cwd'. Raises an error if path is
+    not a subpath of cwd.
+    """
+    sanitized_path = os.path.relpath(os.path.abspath(path), cwd)
+
+    if not sanitized_path.startswith(os.path.pardir):
+        return sanitized_path
+    else:
+        ValueError("{} is not in provided cwd: {}".format(path, cwd))
+
+
 def userfile_iter(userproject_dir):
     """Returns an iterator of relative file paths of all user project files.
     """
