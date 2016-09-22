@@ -147,7 +147,7 @@ def userfile_iter(userproject_dir):
     """Returns an iterator of relative file paths of all user project files.
     """
     return iter(
-        os.path.relpath(os.path.join(cwd, file))
+        sanitize_path(os.path.join(cwd, file), userproject_dir)
         for cwd, dirs, files in os.walk(userproject_dir)
         for file in files
     )
