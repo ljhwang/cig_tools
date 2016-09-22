@@ -175,17 +175,17 @@ def param_ignoredfiles_to_regex(ignore_string):
         return antpattern_to_regex(ignore_string)
 
 
-def load_project_config(cwd=".", info_level=""):
+def load_configfile(cwd=".", info_level=""):
     """Parses the project config file in 'cwd'. If the 'jsonschema' module is
     available, the config file is checked for data errors.
     """
-    project_config = json.load(
+    config = json.load(
         open(os.path.join(cwd, CONFIG_FILENAME), "rt"),
         object_pairs_hook=collections.OrderedDict,
     )
 
     if jsonschema:
-        jsonschema.validate(project_config, CONFIG_SCHEMA)
+        jsonschema.validate(config, CONFIG_SCHEMA)
     elif info_level == "verbose":
         print(
             "\nWARNING: 'jsonschema' module could not be found. User"
@@ -193,4 +193,4 @@ def load_project_config(cwd=".", info_level=""):
             file=sys.stderr,
         )
 
-    return project_config
+    return config
