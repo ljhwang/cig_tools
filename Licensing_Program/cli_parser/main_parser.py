@@ -6,6 +6,7 @@ import argparse
 import cli_parser.check_parser
 import cli_parser.config_parser
 import cli_parser.license_parser
+import cli_parser.write_parser
 
 
 def create_main_parser():
@@ -48,5 +49,7 @@ def create_main_parser():
     command_parser = cli_parser.config_parser.add_command(command_parser)
 
     command_parser = cli_parser.license_parser.add_command(command_parser)
+
+    command_parser = cli_parser.write_parser.add_command(command_parser)
 
     return parser

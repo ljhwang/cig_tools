@@ -17,12 +17,6 @@ def add_command(subparser):
         help="also check files that are set to be ignored",
     )
     parser_check.add_argument(
-        "-a",
-        "--add-missing",
-        action="store_true",
-        help="add project license to files that fail the check",
-    )
-    parser_check.add_argument(
         "-f",
         "--files",
         metavar="FILE",
