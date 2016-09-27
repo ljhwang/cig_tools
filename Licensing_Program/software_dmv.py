@@ -274,7 +274,7 @@ def main(args):
     """Program entrypoint.
     Calls requested CLI command.
     """
-    config = config_handling.load_config(info_level=args.info_level)
+    config = config_handling.load_configfile(info_level=args.info_level)
 
     if args.command == "check":
         main_check(args, config)
