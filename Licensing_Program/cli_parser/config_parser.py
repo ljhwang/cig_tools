@@ -11,6 +11,17 @@ def add_command(subparser):
         description=("Create or validate a configuration file for a software"
                      " project."),
     )
-# TODO: figure out config features/options
+    parser_config.add_argument(
+        "-d",
+        "--print-default",
+        action="store_true",
+        help="output a standard config json string",
+    )
+    parser_config.add_argument(
+        "-c",
+        "--verify-config",
+        action="store_true",
+        help="check that config file is syntactically correct",
+    )
 
     return subparser
