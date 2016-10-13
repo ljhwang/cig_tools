@@ -60,6 +60,8 @@ def create_header(license_name, commentfmt, config):
             for line in header_lines
         ]
 
+    return "".join(header_lines)
+
 
 def rank_license_text(userfile_path, config):
     header_start_line = userfile_handling.find_header_start_line(userfile_path)
