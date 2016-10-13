@@ -5,7 +5,7 @@ import difflib
 import itertools
 
 import licenses
-import userfile_handling
+import userfiles_handling
 
 
 def main(args, config):
