@@ -20,7 +20,7 @@ def _find_header_start_line(path):
     """
     with open(path, "rt") as ro_file:
         fileslice = itertools.islice(ro_file, HEADER_IN_FIRST_N_LINES)
-        for linenum, line in enumerate(fileslice):
+        for linenum, line in enumerate(fileslice, 1):
             if HEADER_SIGNAL_STRING.casefold() in line.casefold():
                 return linenum
 
@@ -97,9 +97,9 @@ def file_has_correct_header(user_filepath, args, config):
         return False
 
 
-def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
+def write_header(header_text, user_filepath, insert_linenum=1, cut_lines=0):
     """Insert header into `user_filepath` starting at line `insert_linenum`
-    (zero based). Removes `cut_lines` amount of lines after the header.
+    (one based). Removes `cut_lines` amount of lines after the header.
     `cut_lines` is useful for cases where existing header lines need to be
     removed.
     """
@@ -116,7 +116,7 @@ def write_header(header_text, user_filepath, insert_linenum=0, cut_lines=0):
             with tempfile.NamedTemporaryFile(
                 mode="wt",
                 delete=False) as outfile:
-                for i, line in enumerate(user_file):
+                for i, line in enumerate(user_file, 1):
                     if i == insert_linenum:
                         outfile.write(header_text)
 
