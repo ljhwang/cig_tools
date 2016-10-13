@@ -98,7 +98,16 @@ CONFIG_SCHEMA = {
 }
 
 CONFIG_DEFAULT = {
-
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore",
+    ],
+    "LicenseParameters": {
+            "ProjectName": "",
+            "fullname": ""
+    },
+    "CommentedFiles": {}
 }
 
 
@@ -194,3 +203,11 @@ def load_configfile(cwd=".", info_level=""):
         )
 
     return config
+
+
+def genearate_default_configfile(cwd="."):
+    """This function generates a simple configuration file
+    with filler values.
+    """
+    with open(CONFIG_FILENAME, 'w') as new_configfile:
+        json.dump(CONFIG_DEFAULT, new_configfile, indent=4)
