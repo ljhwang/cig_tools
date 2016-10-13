@@ -1,3 +1,8 @@
+"""Submodule for getting license information and text.
+Current assumption about licenses is that they all have the word 'Copyright'
+in the first line of their file header.
+"""
+
 import licenses.gpl_2
 import licenses.gpl_3
 
