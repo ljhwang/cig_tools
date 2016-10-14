@@ -64,10 +64,10 @@ def create_header(license_name, commentfmt, config):
 
 
 def rank_license_text(userfile_path, config):
-    header_start_line = userfile_handling.find_header_start_line(userfile_path)
+    header_start_line = userfiles_handling.find_header_start_line(userfile_path)
 
     with open(userfile_path, "rt") as userfile:
-        commentfmt = userfile_handling.commentfmt_userfile(
+        commentfmt = userfiles_handling.commentfmt_userfile(
             userfile_path,
             config
         )
