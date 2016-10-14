@@ -71,7 +71,7 @@ def rank_license_text(userfile_path, config):
     with open(userfile_path, "rt") as userfile:
         commentfmt = userfiles_handling.commentfmt_userfile(
             userfile_path,
-            config
+            config,
         )
 
         userfile_header_iter = iter(
