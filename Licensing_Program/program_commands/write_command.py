@@ -110,6 +110,10 @@ def rank_license_text(userfile_path, config):
                 )
 
         def _snd_ratio_call(pair):
-            return pair[1].ratio()
+            return (pair[0], pair[1].ratio())
 
-        return sorted(_license_sequence_matcher_gen(), _snd_ratio_call)
+        return sorted(
+            map(_snd_ratio_call, _license_sequence_matcher_gen()),
+            key=lambda x: x[1],
+            reverse=True,
+        )
