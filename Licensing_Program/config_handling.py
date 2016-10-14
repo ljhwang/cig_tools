@@ -103,11 +103,12 @@ CONFIG_DEFAULT = {
         ".git/**",
         ".gitignore",
     ],
+    "License": "",
     "LicenseParameters": {
             "ProjectName": "",
-            "fullname": ""
+            "fullname": "",
     },
-    "CommentedFiles": {}
+    "CommentedFiles": {},
 }
 
 
@@ -205,8 +206,8 @@ def load_configfile(cwd=".", info_level=""):
     return config
 
 
-def genearate_default_configfile(cwd="."):
-    """This function generates a simple configuration file
+def write_default_configfile(cwd="."):
+    """This function generates and writes a simple configuration file
     with filler values.
     """
     with open(CONFIG_FILENAME, 'w') as new_configfile:
