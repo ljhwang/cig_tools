@@ -21,7 +21,7 @@ def main(args, config):
 
 
 def create_header(license_name, commentfmt, config):
-    header_text = licenses.licenses_dict[license_name].header
+    header_text = licenses.license_dict[license_name].header
 
     comment_format = (
         config["CommentedFiles"][commentfmt]
