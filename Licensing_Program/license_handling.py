@@ -35,7 +35,8 @@ def get_license_parameters_list(license_name):
 
 def fill_in_license(license_name, config):
     """Return a dictionary containing the formatted text of the license and
-    header.
+    header. Raises a KeyError if config doesn't contain all necessary license
+    parameters.
     """
     user_license = licenses.license_dict[license_name]
 
