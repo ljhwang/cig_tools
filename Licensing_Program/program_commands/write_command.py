@@ -27,6 +27,8 @@ def create_header(license_name, commentfmt, config):
         config["CommentedFiles"][commentfmt]
     )
 
+    header_lines = header_text.splitlines(keepends=True)
+
     if "BlockComments" in comment_format:
         block_format = comment_format["BlockComments"]
 
