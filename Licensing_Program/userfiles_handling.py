@@ -14,7 +14,7 @@ HEADER_SIGNAL_STRING = "Copyright"
 HEADER_IN_FIRST_N_LINES = 20
 
 
-def _find_header_start_line(path):
+def find_header_start_line(path):
     """Find line number of line that holds the token string that signals the
     start of the license header.
     """
@@ -42,7 +42,7 @@ def file_has_correct_header(user_filepath, args, config):
     """Return true if file designated by `path` has the correct header.
     """
     try:
-        linenum = _find_header_start_line(user_filepath)
+        linenum = find_header_start_line(user_filepath)
     except UnicodeDecodeError:
         if args.info_level == "verbose":
             print(
