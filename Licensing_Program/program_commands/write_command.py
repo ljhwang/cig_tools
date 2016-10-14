@@ -15,7 +15,9 @@ def main(args, config):
         pass
 
     if args.headers_only:
-        pass
+        for userfile_path in args.headers_only:
+            print(userfile_path)
+            print(list(rank_license_text(userfile_path, config)))
     else:
         pass
 
