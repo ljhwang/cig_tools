@@ -75,7 +75,7 @@ def rank_license_text(userfile_path, config):
         )
 
         userfile_header_iter = iter(
-            (index, line)
+            line
             for index, line in enumerate(userfile, 1)
             if index >= header_start_line
         )
