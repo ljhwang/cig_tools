@@ -166,20 +166,14 @@ def remove_ignored_userfiles(userfile_paths, config):
     )
 
 
-def commentfmt_userfile_pairing(userfile_paths, config):
+def commentfmt_userfile(userfile_path, config):
     """Returns an iterator of tuples of comment patterns and file paths.
     """
-    return iter(
-        tuple(
-            next(
-                iter(
-                    comment_pattern
-                    for comment_pattern in config["CommentedFiles"]
-                    if re.match(comment_pattern, userfile_path)
-                ),
-                None
-            ),
-            userfile_path
-        )
-        for userfile_path in userfile_paths
+    return next(
+        iter(
+            comment_pattern
+            for comment_pattern in config["CommentedFiles"]
+            if re.match(comment_pattern, userfile_path)
+        ),
+        None
     )
