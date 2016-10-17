@@ -73,52 +73,56 @@ def rank_license_text(userfile_path, config):
     """
     header_start_line = userfiles_handling.find_header_start_line(userfile_path)
 
-    with open(userfile_path, "rt") as userfile:
-        commentfmt = userfiles_handling.commentfmt_userfile(
-            userfile_path,
-            config,
-        )
+    if header_start_line is not None:
+        with open(userfile_path, "rt") as userfile:
+            commentfmt = userfiles_handling.commentfmt_userfile(
+                userfile_path,
+                config,
+            )
 
-        userfile_header_iter = iter(
-            line
-            for index, line in enumerate(userfile, 1)
-            if index >= header_start_line
-        )
+            userfile_header_iter = iter(
+                line
+                for index, line in enumerate(userfile, 1)
+                if index >= header_start_line
+            )
 
-        userfile_header_license_pair = zip(
-            licenses.license_dict.keys(),
-            itertools.tee(userfile_header_iter,
-                          len(licenses.license_dict.keys())),
-        )
+            userfile_header_license_pair = zip(
+                licenses.license_dict.keys(),
+                itertools.tee(userfile_header_iter,
+                              len(licenses.license_dict.keys())),
+            )
 
-        def _license_sequence_matcher_gen():
-            for license_name, userfile_header_iter in \
-                userfile_header_license_pair:
+            def _license_sequence_matcher_gen():
+                for license_name, userfile_header_iter in \
+                    userfile_header_license_pair:
 
-                commented_header = license_handling.create_header(
-                    license_name,
-                    commentfmt,
-                    config,
-                )
+                    commented_header = license_handling.create_header(
+                        license_name,
+                        commentfmt,
+                        config,
+                    )
 
-                yield (
-                    license_name,
-                    difflib.SequenceMatcher(
-                        a=commented_header,
-                        b="".join(
-                            itertools.islice(
-                                userfile_header_iter,
-                                len(commented_header.splitlines())
-                            )
+                    yield (
+                        license_name,
+                        difflib.SequenceMatcher(
+                            a=commented_header,
+                            b="".join(
+                                itertools.islice(
+                                    userfile_header_iter,
+                                    len(commented_header.splitlines())
+                                )
+                            ),
                         ),
-                    ),
-                )
+                    )
 
-        def _snd_ratio_call(pair):
-            return (pair[0], pair[1].ratio())
+            def _snd_ratio_call(pair):
+                return (pair[0], pair[1].ratio())
 
-        return sorted(
-            map(_snd_ratio_call, _license_sequence_matcher_gen()),
-            key=lambda x: x[1],
-            reverse=True,
-        )
+            return sorted(
+                map(_snd_ratio_call, _license_sequence_matcher_gen()),
+                key=lambda x: x[1],
+                reverse=True,
+            )
+
+    else:
+        return []
