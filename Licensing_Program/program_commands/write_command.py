@@ -68,6 +68,9 @@ def create_header(license_name, commentfmt, config):
 
 
 def rank_license_text(userfile_path, config):
+    """Returns a list of licenses sorted based on their percentage chance of
+    matching the current header in the userfile.
+    """
     header_start_line = userfiles_handling.find_header_start_line(userfile_path)
 
     with open(userfile_path, "rt") as userfile:
