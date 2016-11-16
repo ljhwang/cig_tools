@@ -11,7 +11,7 @@ def _is_hidden_path(path: pathlib.PurePath) -> bool:
     def _is_hidden_basename(basename):
         return basename.startswith(os.extsep)
 
-    return any(_is_hidden_basename, path.parts)
+    return any(_is_hidden_basename(part) for part in path.parts)
 
 
 def _is_visible_path(path: pathlib.PurePath) -> bool:
