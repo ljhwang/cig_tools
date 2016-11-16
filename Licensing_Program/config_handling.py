@@ -27,8 +27,8 @@ CONFIG_SCHEMA = {
                     "insertAtLine": {
                         "maximum": userfiles_handling.HEADER_IN_FIRST_N_LINES,
                         "type": "integer",
-                        "minimum": 0,
-                        "default": 0
+                        "minimum": 1,
+                        "default": 1
                     },
                     "oneOf": [
                         {
