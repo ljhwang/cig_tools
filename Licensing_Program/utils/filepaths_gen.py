@@ -5,7 +5,7 @@ import os
 import pathlib
 
 
-def _is_hidden_path(path: pathlib.Path) -> bool:
+def _is_hidden_path(path: pathlib.PurePath) -> bool:
     """Returns `True` if `path` is a hidden file or directory.
     """
     def _is_hidden_basename(basename):
@@ -14,7 +14,7 @@ def _is_hidden_path(path: pathlib.Path) -> bool:
     return any(_is_hidden_basename, path.parts)
 
 
-def _is_visible_path(path: pathlib.Path) -> bool:
+def _is_visible_path(path: pathlib.PurePath) -> bool:
     """Returns `False` if `path` is a hidden file or directory.
     """
     return not _is_hidden_path(path)
