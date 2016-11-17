@@ -27,13 +27,13 @@ def _os_walk_filter(filter_func, top_dir):
     for cwd, dirs, files in os.walk(top_dir):
         for dirname in dirs:
             if not filter_func(
-                    pathlib.Path(cwd, dirname).relative_to(top_dir)):
+                    pathlib.PurePath(cwd, dirname).relative_to(top_dir)):
                 dirs.remove(dirname)
 
         for filename in files:
-            path = pathlib.Path(cwd, filename).relative_to(top_dir)
+            path = pathlib.PurePath(cwd, filename).relative_to(top_dir)
             if filter_func(path):
-                yield path
+                yield pathlib.Path(path)
 
 
 def filepaths_gen(top_dir, include_hidden=False):
