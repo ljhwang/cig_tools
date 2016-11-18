@@ -69,6 +69,17 @@ CONFIG_SCHEMA = {
                             ],
                             "type": "object",
                         },
+                        {
+                            "properties": {
+                                "Uncommented": {
+                                    "type": "null",
+                                },
+                            },
+                            "required": [
+                                "Uncommented",
+                            ],
+                            "type": "object",
+                        },
                     ],
                 },
             },
