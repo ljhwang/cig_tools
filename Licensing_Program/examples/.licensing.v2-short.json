@@ -7,7 +7,7 @@
   "license": "gpl-3",
   "license-parameters": {
     "project-name": "foobar",
-    "copyright-years": "19XX-20YY",
+    "copyright-years": "19XX-20YY"
   },
   "tracked": [
     {
@@ -17,12 +17,12 @@
     },
     {
       "patterns": [ "*.cpp", "*.h" ],
-      "prefixes": [ "/* ", " * ", " */" ],
+      "prefixes": [ "/* ", " * ", " */" ]
     },
     {
       "patterns": "*.txt",
       "insert-at": 1
-    },
+    }
   ]
 }
 
