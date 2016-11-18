@@ -116,8 +116,8 @@ CONFIG_DEFAULT = {
     ],
     "License": "",
     "LicenseParameters": {
-            "ProjectName": "",
-            "fullname": "",
+        "ProjectName": "",
+        "fullname": "",
     },
     "CommentedFiles": {},
 }
