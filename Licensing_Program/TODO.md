@@ -5,3 +5,4 @@
 - Config default values are a mess currently.
 - Give warning about writing to first line of a file that starts with a shebang
   (#!).
+- Handle files with different copyright dates (Impossible?)
