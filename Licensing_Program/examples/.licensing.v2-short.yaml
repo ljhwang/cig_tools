@@ -1,4 +1,4 @@
-ignored:
+ignore:
   - ".git/"
   - ".gitignore"
   - "*.pdf"
@@ -10,7 +10,7 @@ license-parameters: {
   copyright-years: "19XX-20YY"
 }
 
-tracked:
+track:
   -
     patterns: "*.py"
     prefixes: "#  "

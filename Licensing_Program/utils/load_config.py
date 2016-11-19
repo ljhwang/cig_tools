@@ -9,10 +9,10 @@ from voluptuous import All, Any, Length, Optional, Range, Required, Schema
 CONFIG_FILEPATH = ".licensing.yaml"
 INSERTAT_MAX = 20
 CONFIG_SCHEMA = Schema({
-    Optional("ignored"): [str],
+    Optional("ignore"): [str],
     Required("license"): str,
     Required("license-parameters"): {str: str},
-    Required("tracked"): [{
+    Required("track"): [{
         Optional("insert-at", default=1): All(
             int, Range(min=1, max=INSERTAT_MAX)
         ),
@@ -40,14 +40,14 @@ def validate_config_stream(stream):
     """Validate configuration string stream."""
     valid_config = CONFIG_SCHEMA(ruamel.yaml.safe_load(stream))
 
-    valid_config['tracked'] = [
+    valid_config['track'] = [
         _apply_func_to_keyset(
             _string_to_singleton_list,
             {'patterns', 'prefixes'},
             tracked_item,
         )
         for tracked_item
-        in valid_config['tracked']
+        in valid_config['track']
     ]
 
     return valid_config
