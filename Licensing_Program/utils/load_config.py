@@ -37,7 +37,8 @@ def _string_to_singleton_list(value):
 
 
 def validate_config_stream(stream):
-    """Validate configuration string stream."""
+    """Validate configuration string stream.
+    """
     valid_config = CONFIG_SCHEMA(ruamel.yaml.safe_load(stream))
 
     valid_config['track'] = [
