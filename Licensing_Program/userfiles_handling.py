@@ -118,6 +118,8 @@ def write_header(header_text, user_filepath, insert_linenum=1, cut_lines=0):
                 delete=False) as outfile:
                 for i, line in enumerate(user_file, 1):
                     if i == insert_linenum:
+                        if i == 1:
+                            shebang_check(user_file.name, line)
                         outfile.write(header_text)
 
                     if i < insert_linenum or i >= insert_linenum + cut_lines:
@@ -177,3 +179,15 @@ def commentfmt_userfile(userfile_path, config):
         ),
         None
     )
+
+
+def shebang_check(user_file_name, line):
+    """If the variable line begins with the character '#!', an exception is
+    raised.
+    """
+    if line.startswith('#!'):
+        raise ValueError(
+            "File {} starts with a shebang (#!). To insert the header before "
+            "it, use `--ignore-shebang`. Otherwise, change the `InsertAtLine` "
+            "config value.".format(user_file_name)
+        )

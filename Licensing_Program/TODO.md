@@ -3,6 +3,5 @@
 - Config needs better error handling.
 - More modularization. software_dmv.py still does stuff it shouldn't.
 - Config default values are a mess currently.
-- Give warning about writing to first line of a file that starts with a shebang
-  (#!).
+- Add --ignore-shebang CLI option to config -a.
 - Handle files with different copyright dates (Impossible?)
