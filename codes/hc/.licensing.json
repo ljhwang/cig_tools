@@ -1,0 +1,81 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "fullname": "P. Wessel and W. H. F. Smith",
+        "ProjectName": "hc",
+        "year": "1991-2003"
+    },
+    "CommentedFiles": {
+        "**/*.c": {
+            "LineCommentStart": "//    ",
+            "InsertAtLine": 1
+        },
+        "**/*.h": {
+            "LineCommentStart": "//    ",
+            "InsertAtLine": 1
+        },
+        "manipulate_hc.py": {
+            "LineCommentStart": "#    ",
+            "InsertAtLine": 1
+        }, 
+        "**/*.py": {
+            "LineCommentStart": "#    ",
+            "InsertAtLine": 2
+        }, 
+        "**/*.f90": {
+            "LineCommentStart": "!    ",
+            "InsertAtLine": 1
+        }
+    },
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore",
+        "test/**",
+        "*pvsm",
+        "example_data/**",
+        "**/README",
+        "**/*default",
+        "hcplates/enes",
+        "**/Makefile",
+        "**/*mk",
+        "**/*.j",
+        "prem/**",
+        "**/*.ixz",
+        "hcplates/data",
+        "*.par",
+        "*.dat",
+        "make_binary_package",
+        "*.pt",
+        "calc_rms",
+        "orig.ab",
+        "calc_vel_and_plot",
+        "Makefile.craig",
+        "sh.reexpanded.r",
+        "change.log",
+        "calc_dyn_topo",
+        "*.ab",
+        "compare_solution_methods",
+        "plot_geoid",
+        "test_sh_routines",
+        "make_tar",
+        "plot_spectral_model",
+        "*.include",
+        "compile_simple_test",
+        "*.tgz",
+        "compute_and_extract_tractions",
+        "*.TXT",
+        "COPYING",
+        "test_codes",
+        "*gpl",
+        "run_bench",
+        "*.png",
+        "*.old",
+        "*.cpt",
+        "*.sh",
+        "pow.sh_ana",
+        "pow.shana",
+        "hc2gmt",
+        "plot_spatial_model"
+    ]
+}

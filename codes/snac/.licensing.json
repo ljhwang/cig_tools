@@ -1,0 +1,14 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "ProjectName": "snac",
+        "year": "2003",
+        "fullname": "Stevan M. Quenette, Luc Lavier"
+    },
+    "CommentedFiles": {},
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ]
+}

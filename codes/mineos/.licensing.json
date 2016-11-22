@@ -1,0 +1,31 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "fullname": "Guy Masters, John Woodhouse, and Freeman Gilbert",
+        "ProjectName": "MINEOS",
+        "year": ""
+    },
+    "CommentedFiles": {
+        "**/*.c": {
+            "BlockComments": {
+                "BlockStart": "/* ",
+                "BlockEnd": "*/",
+                "BlockLine": " * " 
+            },
+            "InsertAtLine": 0
+        },
+        "**/*.h": {
+            "LineCommentStart": "c ",
+            "InsertAtLine": 0
+        },
+        "**/*.f": {
+            "LineCommentStart": "c ",
+            "InsertAtLine": 0
+        }
+    },
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ]
+}

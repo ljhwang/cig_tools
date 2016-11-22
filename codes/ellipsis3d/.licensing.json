@@ -1,0 +1,14 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "ProjectName": "ellipsis3d",
+        "year": "2003",
+        "fullname": "The GeoFramework Consortium"
+    },
+    "CommentedFiles": {},
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ]
+}
