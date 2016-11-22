@@ -1,0 +1,12 @@
+{
+    "CommentedFiles": {},
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ],
+    "LicenseParameters": {
+        "ProjectName": "",
+        "fullname": ""
+    }
+}

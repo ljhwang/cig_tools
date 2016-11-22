@@ -1,0 +1,19 @@
+{
+    "License": "mit",
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ],
+    "LicenseParameters": {
+        "ProjectName": "Lithomop3d",
+        "year": "2004",
+        "fullname": "Rensselaer Polytechnic Institute"
+    },
+    "CommentedFiles": {
+        "**/*.py": {
+            "LinceCommentStart": "#",
+            "InsertAtLine": 0
+        }
+    }
+}

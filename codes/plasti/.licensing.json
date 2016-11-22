@@ -1,0 +1,19 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "ProjectName": "plasti",
+        "year": "1995-2006",
+        "fullname": "Sean Willett, Chris Fuller"
+    },
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ],
+    "CommentedFiles": {
+        "**/*.f": {
+          "LineCommentStart": "C ",
+          "InsertAtLine": 0
+        }
+    }
+}

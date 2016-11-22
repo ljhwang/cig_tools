@@ -1,0 +1,33 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "fullname": "",
+        "ProjectName": "mag",
+        "year": ""
+    },
+    "CommentedFiles": {
+        "**/*.f": {
+            "LineCommentStart": "c ",
+            "InsertAtLine": 1
+        }
+    },
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore",
+        "doc/**",
+        "bench-data/**",
+        "rev-data/**",
+        "src/*.bnch0",
+        "src/par.bnch0_copy",
+        "src/*.bnch1",
+        "src/par.bnch1mv",
+        "src/par.Rev",
+        "src/*.gravdyn",
+        "src/*.Revmv",
+        "src/makefile",
+        "idl/**",
+        "COPYING",
+        "Makefile"
+    ]
+}

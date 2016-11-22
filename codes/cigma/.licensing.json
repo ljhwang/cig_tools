@@ -1,0 +1,23 @@
+{
+    "License": "gpl-2",
+    "LicenseParameters": {
+        "fullname": "University of Maryland and Sunil Arya and David Mount",
+        "ProjectName": "cigma",
+        "year": "1997-2005"
+    },
+    "CommentedFiles": {
+        "**/*.cpp": {
+            "LineCommentStart": "// ",
+            "InsertAtLine": 1
+        },
+        "**/*.h": {
+            "LineCommentStart": "// ",
+            "InsertAtLine": 1
+        }
+    },
+    "IgnoredFiles": [
+        ".licensing.json",
+        ".git/**",
+        ".gitignore"
+    ]
+}
