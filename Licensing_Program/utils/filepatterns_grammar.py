@@ -15,28 +15,42 @@ lg.add("BACKSLASH", r"\\")
 lg.add("BRACKET_CLOSE", r"\]")
 lg.add("BRACKET_OPEN", r"\[")
 lg.add("SLASH", r"/")
-
-lg.add("UNUSED_SYMBOL", r"[}{^$?)(.|+]")
-
-lg.add("NONSYMBOLS", r"[^*\\}{\]\[^$?)(.|+/]+")
+lg.add("UNUSED_SYMBOL", r"[$()+.?^{|}]")
+lg.add("NONSYMBOL", r"[^$()*+./?\[\\\]^{|}]")
 
 lexer = lg.build()
 
-pg = rply.ParserGenerator([
-    "ASTERISK",
-    "BACKSLASH",
-    "BRACKET_CLOSE",
-    "BRACKET_OPEN",
-    "SLASH",
+pg = rply.ParserGenerator(
+    [
+        "ASTERISK",
+        "BACKSLASH",
+        "BRACKET_CLOSE",
+        "BRACKET_OPEN",
+        "SLASH",
+        "UNUSED_SYMBOL",
+        "NONSYMBOL",
+    ]
+)
 
-    "UNUSED_SYMBOL",
-    "NONSYMBOLS",
-])
 
-@pg.production("bracket_set : non_escape BRACKET_OPEN match_set BRACKET_CLOSE")
+@pg.production("pattern : NONSYMBOL")
+@pg.production("pattern : UNUSED_SYMBOL")
+@pg.production("pattern : BRACKET_OPEN bracket_pattern BRACKET_CLOSE")
+@pg.production("pattern : pattern pattern")
+def _pattern(p):
+    return "e"
 
-@pg.production("escaped_symbol : BACKSLASH UNUSED_SYMBOL")
-def _escaped_symbol(p):
-    return p[0].getstr() + p[1].getstr()
+
+@pg.production("bracket_pattern : ASTERISK")
+@pg.production("bracket_pattern : BACKSLASH BACKSLASH")
+@pg.production("bracket_pattern : BACKSLASH BRACKET_CLOSE")
+@pg.production("bracket_pattern : BACKSLASH BRACKET_OPEN")
+@pg.production("bracket_pattern : SLASH")
+@pg.production("bracket_pattern : UNUSED_SYMBOL")
+@pg.production("bracket_pattern : NONSYMBOL")
+@pg.production("bracket_pattern : bracket_pattern bracket_pattern")
+def _bracket_pattern(p):
+    return "c"
+
 
 parser = pg.build()
