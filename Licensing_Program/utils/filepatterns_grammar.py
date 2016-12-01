@@ -35,12 +35,35 @@ def _create_parser():
         ]
     )
 
-    @pg.production("pattern : NONSYMBOL")
-    @pg.production("pattern : UNUSED_SYMBOL")
-    @pg.production("pattern : escaped_symbol")
-    @pg.production("pattern : BRACKET_OPEN bracket_pattern BRACKET_CLOSE")
-    @pg.production("pattern : pattern pattern")
-    def _pattern(p):
+    # TODO:
+    #   * without /
+    #   * with /
+    #   **/
+    #   /**/
+    #   /**
+
+    @pg.production("path_pattern_slash : SLASH")
+    @pg.production("path_pattern_slash : path_part SLASH")
+    @pg.production("path_pattern_slash : path_pattern SLASH")
+    def _path_pattern_slash(p):
+        return p
+
+    @pg.production("path_pattern : path_pattern_a")
+    @pg.production("path_pattern : path_part path_pattern_a")
+    def _path_pattern(p):
+        return p
+
+    @pg.production("path_pattern_a : SLASH path_part")
+    @pg.production("path_pattern_a : path_pattern_a path_pattern_a")
+    def _path_pattern_a(p):
+        return p
+
+    @pg.production("path_part : NONSYMBOL")
+    @pg.production("path_part : UNUSED_SYMBOL")
+    @pg.production("path_part : escaped_symbol")
+    @pg.production("path_part : BRACKET_OPEN bracket_pattern BRACKET_CLOSE")
+    @pg.production("path_part : path_part path_part")
+    def _path_part(p):
         return p
 
     @pg.production("bracket_pattern : ASTERISK")
