@@ -36,44 +36,61 @@ def _create_parser():
     )
 
     # TODO:
-    #   * without /
-    #   * with /
-    #   **/
-    #   /**/
-    #   /**
+    #   BETTER NAMES
 
-    @pg.production("path_pattern_slash : SLASH")
-    @pg.production("path_pattern_slash : path_part SLASH")
-    @pg.production("path_pattern_slash : path_pattern SLASH")
-    def _path_pattern_slash(p):
-        return p
+    @pg.production("pattern : path_pattern")
+    @pg.production("pattern : root_pattern")
+    def _pattern(p):
+        return ("pattern", p)
 
-    @pg.production("path_pattern : path_pattern_a")
-    @pg.production("path_pattern : path_part path_pattern_a")
+    # path_pattern has a SLASH somewhere in pattern
+    @pg.production("path_pattern : trailing_slash_pattern")
+    @pg.production("path_pattern : nontrail_slash_pattern")
     def _path_pattern(p):
-        return p
+        return ("path_pattern", p)
 
-    @pg.production("path_pattern_a : SLASH path_part")
-    @pg.production("path_pattern_a : path_pattern_a path_pattern_a")
-    def _path_pattern_a(p):
-        return p
+    # trailing_slash_pattern has a slash at the end
+    @pg.production("trailing_slash_pattern : SLASH")
+    @pg.production("trailing_slash_pattern : path_part SLASH")
+    @pg.production("trailing_slash_pattern : nontrail_slash_pattern SLASH")
+    def _trailing_slash_pattern(p):
+        return ("trailing_slash_pattern", p)
 
-    @pg.production("path_part : NONSYMBOL")
-    @pg.production("path_part : UNUSED_SYMBOL")
-    @pg.production("path_part : escaped_symbol")
-    @pg.production("path_part : BRACKET_OPEN bracket_pattern BRACKET_CLOSE")
-    @pg.production("path_part : path_part path_part")
+    @pg.production("root_pattern : ASTERISK")
+    @pg.production("root_pattern : path_part_a")
+    @pg.production("root_pattern : ASTERISK path_part_a")
+    def _root_pattern(p):
+        return ("root_pattern", p)
+
+    @pg.production("nontrail_slash_pattern : trailing_slash_pattern path_part")
+    def _nontrail_slash_pattern(p):
+        return ("nontrail_slash_pattern", p)
+
+    @pg.production("path_part : ASTERISK ASTERISK")
+    @pg.production("path_part : root_pattern")
     def _path_part(p):
-        return p
+        return ("path_part", p)
 
-    @pg.production("bracket_pattern : ASTERISK")
-    @pg.production("bracket_pattern : SLASH")
-    @pg.production("bracket_pattern : UNUSED_SYMBOL")
-    @pg.production("bracket_pattern : NONSYMBOL")
-    @pg.production("bracket_pattern : escaped_symbol")
-    @pg.production("bracket_pattern : bracket_pattern bracket_pattern")
-    def _bracket_pattern(p):
-        return p
+    @pg.production("path_part_a : path_part_b")
+    @pg.production("path_part_a : path_part_a ASTERISK")
+    def _path_part_a(p):
+        return ("path_part_a", p)
+
+    @pg.production("path_part_b : UNUSED_SYMBOL")
+    @pg.production("path_part_b : NONSYMBOL")
+    @pg.production("path_part_b : BRACKET_OPEN bracket_set BRACKET_CLOSE")
+    @pg.production("path_part_b : escaped_symbol")
+    @pg.production("path_part_b : path_part_b path_part_b")
+    def _path_part_b(p):
+        return ("path_part_b", p)
+
+    @pg.production("bracket_set : ASTERISK")
+    @pg.production("bracket_set : UNUSED_SYMBOL")
+    @pg.production("bracket_set : NONSYMBOL")
+    @pg.production("bracket_set : escaped_symbol")
+    @pg.production("bracket_set : bracket_set bracket_set")
+    def _bracket_set(p):
+        return ("bracket_set", p)
 
     @pg.production("escaped_symbol : BACKSLASH ASTERISK")
     @pg.production("escaped_symbol : BACKSLASH BACKSLASH")
@@ -82,6 +99,6 @@ def _create_parser():
     @pg.production("escaped_symbol : BACKSLASH SLASH")
     @pg.production("escaped_symbol : BACKSLASH UNUSED_SYMBOL")
     def _escaped_symbol(p):
-        return p
+        return ("escaped_symbol", p)
 
     return pg.build()
