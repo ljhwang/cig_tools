@@ -35,32 +35,21 @@ def _create_parser():
         ]
     )
 
-    # TODO:
-    #   BETTER NAMES
-
     @pg.production("pattern : path_pattern")
     @pg.production("pattern : root_pattern")
     def _pattern(p):
         return ("pattern", p)
 
-    # path_pattern has a SLASH somewhere in pattern
     @pg.production("path_pattern : trailing_slash_pattern")
     @pg.production("path_pattern : nontrail_slash_pattern")
     def _path_pattern(p):
         return ("path_pattern", p)
 
-    # trailing_slash_pattern has a slash at the end
     @pg.production("trailing_slash_pattern : SLASH")
     @pg.production("trailing_slash_pattern : path_part SLASH")
     @pg.production("trailing_slash_pattern : nontrail_slash_pattern SLASH")
     def _trailing_slash_pattern(p):
         return ("trailing_slash_pattern", p)
-
-    @pg.production("root_pattern : ASTERISK")
-    @pg.production("root_pattern : path_part_a")
-    @pg.production("root_pattern : ASTERISK path_part_a")
-    def _root_pattern(p):
-        return ("root_pattern", p)
 
     @pg.production("nontrail_slash_pattern : trailing_slash_pattern path_part")
     def _nontrail_slash_pattern(p):
@@ -71,18 +60,29 @@ def _create_parser():
     def _path_part(p):
         return ("path_part", p)
 
-    @pg.production("path_part_a : path_part_b")
-    @pg.production("path_part_a : path_part_a ASTERISK")
-    def _path_part_a(p):
-        return ("path_part_a", p)
+    @pg.production("root_pattern : no_atrsk_part")
+    @pg.production("root_pattern : trailing_atrsk_part")
+    @pg.production("root_pattern : nontrail_atrsk_part")
+    def _root_pattern(p):
+        return ("root_pattern", p)
 
-    @pg.production("path_part_b : UNUSED_SYMBOL")
-    @pg.production("path_part_b : NONSYMBOL")
-    @pg.production("path_part_b : BRACKET_OPEN bracket_set BRACKET_CLOSE")
-    @pg.production("path_part_b : escaped_symbol")
-    @pg.production("path_part_b : path_part_b path_part_b")
-    def _path_part_b(p):
-        return ("path_part_b", p)
+    @pg.production("trailing_atrsk_part : ASTERISK")
+    @pg.production("trailing_atrsk_part : no_atrsk_part ASTERISK")
+    @pg.production("trailing_atrsk_part : nontrail_atrsk_part ASTERISK")
+    def _trailing_atrsk_part(p):
+        return ("trailing_atrsk_part", p)
+
+    @pg.production("nontrail_atrsk_part : trailing_atrsk_part no_atrsk_part")
+    def _nontrail_atrsk_part(p):
+        return ("nontrail_atrsk_part", p)
+
+    @pg.production("no_atrsk_part : UNUSED_SYMBOL")
+    @pg.production("no_atrsk_part : NONSYMBOL")
+    @pg.production("no_atrsk_part : BRACKET_OPEN bracket_set BRACKET_CLOSE")
+    @pg.production("no_atrsk_part : escaped_symbol")
+    @pg.production("no_atrsk_part : no_atrsk_part no_atrsk_part")
+    def _no_atrsk_part(p):
+        return ("no_atrsk_part", p)
 
     @pg.production("bracket_set : ASTERISK")
     @pg.production("bracket_set : UNUSED_SYMBOL")
