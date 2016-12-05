@@ -1,26 +1,10 @@
-"""
+"""Module for filepattern grammar. Exports `create_parser` function.
 """
 
 import rply
 
 
-def _create_lexer():
-    """
-    """
-    lg = rply.LexerGenerator()
-
-    lg.add("ASTERISK", r"\*")
-    lg.add("BACKSLASH", r"\\")
-    lg.add("BRACKET_CLOSE", r"\]")
-    lg.add("BRACKET_OPEN", r"\[")
-    lg.add("SLASH", r"/")
-    lg.add("UNUSED_SYMBOL", r"[$()+.?^{|}]")
-    lg.add("NONSYMBOL", r"[^$()*+./?\[\\\]^{|}]")
-
-    return lg.build()
-
-
-def _create_parser():
+def create_parser():
     """
     """
     pg = rply.ParserGenerator(
