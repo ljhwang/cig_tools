@@ -8,6 +8,9 @@ class UnitBox(rply.token.BaseBox):
     def __init__(self, token):
         self.token = token
 
+    def getstr(self):
+        return self.token.getstr()
+
 
 class ListBox(rply.token.BaseBox):
     def __init__(self, *tokens):
@@ -17,10 +20,13 @@ class ListBox(rply.token.BaseBox):
         self.tokens += listbox.tokens
         return self
 
+    def getstr(self):
+        return "".join(token.getstr() for token in self.tokens)
+
 
 class EscapedSymbol(UnitBox):
     def getstr(self):
-        return "\\{}".format(token.getstr())
+        return "\\" + self.token.getstr()
 
 
 class BracketSet(ListBox):
@@ -28,6 +34,21 @@ class BracketSet(ListBox):
         return "[{}]".format("".join(token.getstr() for token in self.tokens))
 
 
+class NoAtrskPart(ListBox):
+    pass
+
+
+class NonTrailAtrskPart(ListBox):
+    pass
+
+
+class TrailingAtrskPart(ListBox):
+    def getstr(self, root_pattern=False):
+        if root_pattern:
+            pass
+        else:
+            pass
+
+
 class PathPart(ListBox):
-    def getstr(self):
-        return "".join(token.getstr() for token in self.tokens)
+    pass

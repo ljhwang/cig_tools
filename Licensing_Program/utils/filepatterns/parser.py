@@ -3,7 +3,7 @@
 
 import rply
 
-import filepatterns_ast_types
+import filepatterns.ast_types
 
 
 def create_parser():
@@ -60,7 +60,7 @@ def create_parser():
 
     @pg.production("nontrail_atrsk_part : trailing_atrsk_part no_atrsk_part")
     def _nontrail_atrsk_part(p):
-        pass
+        return p[0] + p[1]
 
     @pg.production("no_atrsk_part : UNUSED_SYMBOL")
     @pg.production("no_atrsk_part : NONSYMBOL")
@@ -68,7 +68,12 @@ def create_parser():
     @pg.production("no_atrsk_part : BRACKET_OPEN bracket_set BRACKET_CLOSE")
     @pg.production("no_atrsk_part : no_atrsk_part no_atrsk_part")
     def _no_atrsk_part(p):
-        pass
+        if len(p) == 1:
+            return filepatterns.ast_types.NoAtrskPart(p[0])
+        elif len(p) == 3:
+            return filepatterns.ast_types.NoAtrskPart(p[1])
+        elif len(p) == 2:
+            return p[0] + p[1]
 
     @pg.production("bracket_set : ASTERISK")
     @pg.production("bracket_set : UNUSED_SYMBOL")
@@ -77,7 +82,7 @@ def create_parser():
     @pg.production("bracket_set : bracket_set bracket_set")
     def _bracket_set(p):
         if len(p) == 1:
-            return filepatterns_ast_types.BracketSet(p[0])
+            return filepatterns.ast_types.BracketSet(p[0])
         elif len(p) == 2:
             return p[0] + p[1]
 
@@ -88,6 +93,6 @@ def create_parser():
     @pg.production("escaped_symbol : BACKSLASH SLASH")
     @pg.production("escaped_symbol : BACKSLASH UNUSED_SYMBOL")
     def _escaped_symbol(p):
-        return filepatterns_ast_types.EscapedSymbol(p[1])
+        return filepatterns.ast_types.EscapedSymbol(p[1])
 
     return pg.build()
