@@ -3,6 +3,7 @@
 import collections
 import difflib
 import itertools
+import multiprocessing
 import os
 import pathlib
 import sys
@@ -10,7 +11,7 @@ import sys
 
 CONFIG = {
     "LinesChecked" : 50,
-    "HeaderToken" : "copyright".casefold(),
+    "RankMin" : 0.2,
     "LicenseSampleFiles" : list(
         pathlib.Path(".").glob("license_samples/*.header")
     ),
@@ -36,96 +37,83 @@ def project_path_gen(project_dir):
                     yield filepath
 
 
-def find_header_start_line(path):
-    """Find line number of line that holds the token string that signals the
-    start of the license header.
+def rank_license_text(args):
+    """Returns a list of userfiles and the probability of matching licenses
+    in the license sample directory.
     """
-    with path.open("rt") as ro_file:
-        for linenum, line in enumerate(ro_file, 1):
-            if CONFIG["HeaderToken"] in line.casefold():
-                return linenum
-            elif CONFIG["LinesChecked"] < linenum:
-                return None
+    userfile_path, project_dir = args
 
-    return None
+    with userfile_path.open("rt") as userfile:
+        userfile_iter = itertools.islice(userfile, CONFIG["LinesChecked"])
 
+        license_userfileiter_pair = zip(
+            CONFIG["LicenseSampleFiles"],
+            itertools.tee(userfile_iter, len(CONFIG["LicenseSampleFiles"])),
+        )
 
-def rank_license_text(userfile_path, project_dir):
-    """Returns a list of licenses sorted based on their percentage chance of
-    matching the current header in the userfile.
-    """
-    header_start_line = find_header_start_line(userfile_path)
-
-    if header_start_line is not None:
-        with userfile_path.open("rt") as userfile:
-            userfile_iter = iter(
-                line
-                for index, line in enumerate(userfile, 1)
-                if index >= header_start_line
-            )
-
-            license_userfileiter_pair = zip(
-                CONFIG["LicenseSampleFiles"],
-                itertools.tee(userfile_iter,
-                              len(CONFIG["LicenseSampleFiles"])),
-            )
-
-            def _license_sequence_matcher_gen():
-                for license_path, userfile_iter in license_userfileiter_pair:
-                    license = license_path.open("rt").read()
-                    yield (
-                        difflib.SequenceMatcher(
-                            a=license,
-                            b="".join(
-                                itertools.islice(
-                                    userfile_iter,
-                                    len(license.splitlines())
-                                )
-                            ),
-                        ),
-                        license_path.stem,
-                    )
-
-            def _fst_ratio_call(pair):
-                return (pair[0].ratio(), pair[1])
-
-            return (
-                userfile_path.suffix, (
-                    str(userfile_path.relative_to(project_dir)),
-                    sorted(
-                        map(_fst_ratio_call, _license_sequence_matcher_gen()),
-                        reverse=True,
-                    )
+        def _license_sequence_matcher_gen():
+            for license_path, userfile_iter in license_userfileiter_pair:
+                license = license_path.open("rt").read()
+                yield (
+                    difflib.SequenceMatcher(
+                        a=license,
+                        b="".join(userfile_iter),
+                    ),
+                    license_path.stem,
                 )
-            )
 
-    else:
+        def _fst_ratio_call(pair):
+            return (pair[0].ratio(), pair[1])
+
         return (
             userfile_path.suffix, (
                 str(userfile_path.relative_to(project_dir)),
-                [(0.0, "no_license")]
+                sorted(
+                    map(_fst_ratio_call, _license_sequence_matcher_gen()),
+                    reverse=True,
+                )
             )
         )
 
 
 def print_ranking():
+    pool = multiprocessing.Pool()
     result = collections.defaultdict(list)
 
-    for userfile_path in project_path_gen(sys.argv[1]):
-        suffix, (path, ranks) = rank_license_text(userfile_path, sys.argv[1])
-
+    for suffix, (path, ranks) in pool.imap_unordered(
+        rank_license_text,
+        zip(project_path_gen(sys.argv[1]), itertools.repeat(sys.argv[1]))
+            ):
         result[suffix] += [(path, ranks)]
 
     print("{")
     for suffix in sorted(result.keys()):
+        empty_ranks = True
+
         print("  {!r} :".format(suffix))
         print("    [")
 
         for path, ranks in sorted(result[suffix], key=lambda pair: pair[::-1]):
-            print("      {} : {!r}".format(
-                [(round(val, 5), lice) for val, lice in ranks],
-                path,
-            ))
+            ranks = [
+                (rank, license)
+                for rank, license in ranks
+                if rank >= CONFIG["RankMin"]
+            ]
+
+            if ranks:
+                if empty_ranks:
+                    print("\n\n\n")
+                    empty_ranks = False
+
+                print("      {!r} : [".format(path))
+
+                for rank, license in ranks:
+                    print("        {:08.3%} : {}".format(rank, license))
+
+                print("      ],")
+
+            else:
+                print("      {!r},".format(path))
 
         print("    ],")
         print("  ,")
