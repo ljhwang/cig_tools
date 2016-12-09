@@ -12,7 +12,7 @@ CONFIG = {
     "LinesChecked" : 50,
     "HeaderToken" : "copyright".casefold(),
     "LicenseSampleFiles" : list(
-        pathlib.Path(".").glob("license_samples/*.license")
+        pathlib.Path(".").glob("license_samples/*.header")
     ),
 }
 
