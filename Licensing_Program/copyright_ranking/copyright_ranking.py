@@ -88,7 +88,7 @@ def print_ranking():
 
     print("{")
     for suffix in sorted(result.keys()):
-        empty_ranks = True
+        empty_ranks = False
 
         print("  {!r} :".format(suffix))
         print("    [")
@@ -113,6 +113,7 @@ def print_ranking():
                 print("      ],")
 
             else:
+                empty_ranks = True
                 print("      {!r},".format(path))
 
         print("    ],")
