@@ -10,7 +10,7 @@ import sys
 
 
 CONFIG = {
-    "LinesChecked" : 50,
+    "LinesChecked" : 32,
     "RankMin" : 0.2,
     "LicenseSampleFiles" : list(
         pathlib.Path(".").glob("license_samples/*.header")
@@ -30,7 +30,8 @@ def project_path_gen(project_dir):
             if not filename.startswith(os.extsep):
                 filepath = pathlib.Path(os.path.join(cwd, filename)).absolute()
                 try:
-                    filepath.open("rt").read()
+                    with filepath.open("rt") as userfile:
+                        userfile.read()
                 except UnicodeDecodeError:
                     pass
                 else:
@@ -43,37 +44,39 @@ def rank_license_text(args):
     """
     userfile_path, project_dir = args
 
-    with userfile_path.open("rt") as userfile:
-        userfile_iter = itertools.islice(userfile, CONFIG["LinesChecked"])
-
-        license_userfileiter_pair = zip(
-            CONFIG["LicenseSampleFiles"],
-            itertools.tee(userfile_iter, len(CONFIG["LicenseSampleFiles"])),
-        )
-
-        def _license_sequence_matcher_gen():
-            for license_path, userfile_iter in license_userfileiter_pair:
+    def _license_rank_gen():
+        with userfile_path.open("rt") as userfile:
+            for license_path, userfile_iter in zip(
+                CONFIG["LicenseSampleFiles"],
+                itertools.tee(
+                    userfile,
+                    len(CONFIG["LicenseSampleFiles"]) * CONFIG["LinesChecked"]
+                )
+            ):
                 license = license_path.open("rt").read()
+                license_len = len(license.splitlines())
+
                 yield (
-                    difflib.SequenceMatcher(
-                        a=license,
-                        b="".join(userfile_iter),
+                    max(
+                        difflib.SequenceMatcher(
+                            a=license,
+                            b="".join(
+                                itertools.islice(
+                                    userfile_iter, index, index + license_len)
+                            ),
+                        ).ratio()
+                        for index in range(CONFIG["LinesChecked"])
                     ),
                     license_path.stem,
                 )
 
-        def _fst_ratio_call(pair):
-            return (pair[0].ratio(), pair[1])
-
-        return (
-            userfile_path.suffix, (
-                str(userfile_path.relative_to(project_dir)),
-                sorted(
-                    map(_fst_ratio_call, _license_sequence_matcher_gen()),
-                    reverse=True,
-                )
-            )
+    return (
+        userfile_path.suffix,
+        (
+            str(userfile_path.relative_to(project_dir)),
+            sorted(_license_rank_gen(), reverse=True),
         )
+    )
 
 
 def print_ranking():
@@ -83,7 +86,7 @@ def print_ranking():
     for suffix, (path, ranks) in pool.imap_unordered(
         rank_license_text,
         zip(project_path_gen(sys.argv[1]), itertools.repeat(sys.argv[1]))
-            ):
+    ):
         result[suffix] += [(path, ranks)]
 
     print("{")
