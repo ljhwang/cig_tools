@@ -11,6 +11,7 @@ import sys
 
 CONFIG = {
     "LinesChecked" : 32,
+    "MaxHeaderLines" : 16,
     "RankMin" : 0.2,
     "LicenseSampleFiles" : list(
         pathlib.Path(".").glob("license_samples/*.header")
@@ -56,19 +57,35 @@ def rank_license_text(args):
                 license = license_path.open("rt").read()
                 license_len = len(license.splitlines())
 
-                yield (
-                    max(
-                        difflib.SequenceMatcher(
-                            a=license,
-                            b="".join(
-                                itertools.islice(
-                                    userfile_iter, index, index + license_len)
-                            ),
-                        ).ratio()
-                        for index in range(CONFIG["LinesChecked"])
+                diff_rank, lineno = max(
+                    (
+                        (
+                            difflib.SequenceMatcher(
+                                a=license,
+                                b="".join(
+                                    itertools.islice(
+                                        userfile_iter,
+                                        lineno,
+                                        lineno + license_len,
+                                    )
+                                ),
+                            ).ratio(),
+                            lineno + 1,  # line numbers one-based
+                        )
+                        for lineno in range(CONFIG["LinesChecked"])
                     ),
-                    license_path.stem,
+                    key=lambda pair: pair[0],
                 )
+
+                # formula to lessen rank of short headers
+                rank = diff_rank ** (
+                    max(
+                        CONFIG["MaxHeaderLines"]
+                            / len(license_path.open("rt").read().splitlines()),
+                        1,
+                    ) ** (1 / 4))
+
+                yield (rank, diff_rank, lineno, license_path.stem)
 
     return (
         userfile_path.suffix,
@@ -98,8 +115,8 @@ def print_ranking():
 
         for path, ranks in sorted(result[suffix], key=lambda pair: pair[::-1]):
             ranks = [
-                (rank, license)
-                for rank, license in ranks
+                (rank, diff_rank, lineno, license)
+                for rank, diff_rank, lineno, license in ranks
                 if rank >= CONFIG["RankMin"]
             ]
 
@@ -110,8 +127,11 @@ def print_ranking():
 
                 print("      {!r} : [".format(path))
 
-                for rank, license in ranks:
-                    print("        {:08.3%} : {}".format(rank, license))
+                for rank, diff_rank, lineno, license in ranks:
+                    print(
+                        "        {:6.1%} ({:6.1%}) : {:12} line: {:2}".format(
+                            rank, diff_rank, license, lineno)
+                    )
 
                 print("      ],")
 
