@@ -117,7 +117,7 @@ def print_ranking():
             ranks = [
                 (rank, diff_rank, lineno, license)
                 for rank, diff_rank, lineno, license in ranks
-                if rank >= CONFIG["RankMin"]
+                if rank >= CONFIG["RankMin"] or True
             ]
 
             if ranks:
