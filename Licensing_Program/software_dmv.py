@@ -274,16 +274,17 @@ def main(args):
     """Program entrypoint.
     Calls requested CLI command.
     """
-    config = config_handling.load_configfile()
 
-    if args.command == "check":
-        main_check(args, config)
-    elif args.command == "choose":
-        main_choose(args, config)
-    elif args.command == "list":
-        main_list(args, config)
-    elif args.command == "settings":
-        main_settings(args, config)
+    if args.command == "list":
+        main_list(args, None)
+    else:
+        config = config_handling.load_configfile()
+        if args.command == "check":
+            main_check(args, config)
+        elif args.command == "choose":
+            main_choose(args, config)
+        elif args.command == "settings":
+            main_settings(args, config)
 
 
 if __name__ == "__main__":
