@@ -7,11 +7,10 @@ import itertools
 import re
 import tempfile
 
-import license_handling
-
-
-HEADER_SIGNAL_STRING = "Copyright"
 HEADER_IN_FIRST_N_LINES = 20
+HEADER_SIGNAL_STRING = "Copyright"
+
+import license_handling
 
 
 def find_header_start_line(path):
