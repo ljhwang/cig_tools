@@ -10,37 +10,35 @@ import matplotlib.pyplot as plt
 
 CONFIG = {
     "Specfem3dDB" : "specfem3d_license_info.db",
+    "DatabaseSchema" : """
+        CREATE TABLE licenses
+            (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL UNIQUE,
+                line_amount INTEGER DEFAULT NULL
+            );
+        CREATE TABLE project_files
+            (
+                id INTEGER PRIMARY KEY,
+                path TEXT NOT NULL UNIQUE,
+                manual_license REFERENCES licenses (id)
+            );
+        CREATE TABLE ranking_algorithms
+            (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL UNIQUE
+            );
+        CREATE TABLE calculated_license_rank
+            (
+                file REFERENCES project_files (id),
+                algorithm REFERENCES ranking_algorithms (id),
+                license REFERENCES licenses (id),
+                ranking REAL NOT NULL,
+                position_lineno INTEGER NOT NULL,
+                PRIMARY KEY (file, algorithm, license)
+            );
+        """,
 }
-
-
-"""
-CREATE TABLE licenses
-    (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL UNIQUE,
-        line_amount INTEGER DEFAULT NULL
-    );
-CREATE TABLE project_files
-    (
-        id INTEGER PRIMARY KEY,
-        path TEXT NOT NULL UNIQUE,
-        manual_license REFERENCES licenses (id)
-    );
-CREATE TABLE ranking_algorithms
-    (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL UNIQUE
-    );
-CREATE TABLE calculated_license_rank
-    (
-        file REFERENCES project_files (id),
-        algorithm REFERENCES ranking_algorithms (id),
-        license REFERENCES licenses (id),
-        ranking REAL NOT NULL,
-        position_lineno INTEGER NOT NULL,
-        PRIMARY KEY (file, algorithm, license)
-    );
-"""
 
 if __name__ == "__main__":
     with sql.connect(
