@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 
 import collections
+import itertools
+import math
 import sqlite3 as sql
 
 from pprint import pprint
@@ -177,10 +179,46 @@ if __name__ == "__main__":
 
         data = collections.defaultdict(list)
 
-        for algorithm, license, ranking in cursor:
-            data[(algorithm, license)].append(ranking)
+        #for algorithm, license, ranking in cursor:
+        #    data[(algorithm, license)].append(ranking)
 
-        pprint(data)
+        for algorithm, license, ranking in cursor:
+            data[algorithm].append(ranking)
+
+        correctly_ranked_fig = plt.figure()
+        correctly_ranked_fig.suptitle(
+            "Sameness Distribution of Files Correctly Ranked"
+        )
+
+        correctly_ranked_fig.add_subplot()
+        correctly_ranked_ax = correctly_ranked_fig.gca()
+
+        data_keys, data_values = zip(*sorted(data.items()))
+
+        correctly_ranked_ax.hist(
+            data_values,
+            range=(0,1),
+            bins=50,
+            color=CONFIG["ColorList"][2:len(data_values) + 2],
+            edgecolor="None",
+            label=[
+                "{} - Total: {}".format(key, len(data[key]))
+                for key in data_keys
+            ],
+        )
+
+        correctly_ranked_ax.set_xticklabels([
+            "{:.0%}".format(tick)
+            for tick in correctly_ranked_ax.get_xticks()
+        ])
+
+        correctly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
+        correctly_ranked_ax.set_ylim(0, 10)
+
+        correctly_ranked_ax.legend()
+        correctly_ranked_ax.grid(True)
+
+        plt.show()
 
         # histogram showing ranks for when manual license contradicts top
         # ranked license
