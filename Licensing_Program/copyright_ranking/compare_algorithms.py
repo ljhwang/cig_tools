@@ -77,7 +77,6 @@ if __name__ == "__main__":
             *sorted(
                 data.items(),
                 key=lambda pair: tuple(reversed(pair)),
-                reverse=True,
             )
         )
 
@@ -89,59 +88,39 @@ if __name__ == "__main__":
             "# of files per license (manual best-effort)"
         )
 
-        files_per_license_fig.add_subplot(1,2,1)
+        files_per_license_fig.add_subplot(2,1,1)
         files_per_license_ax = files_per_license_fig.gca()
 
-        files_per_license_fig.add_subplot(1,2,2)
-        files_per_license_rare_ax = files_per_license_fig.gca()
+        files_per_license_fig.add_subplot(2,1,2)
+        files_per_license_zoomed_ax = files_per_license_fig.gca()
 
-        files_per_license_ax.bar(
+        files_per_license_ax.barh(
             range(len(data_keys)),
             data_values,
             tick_label=data_keys,
-            align='center',
-            color='teal',
-            edgecolor='',
+            align="center",
+            color=CONFIG["ColorMap"][0],
+            edgecolor="",
         )
 
-        # remove largest values, to show values for rare licenses
-        # works because data is sorted
-        rare_values = list(filter(lambda n: n < 100, data_values))
-        rare_keys = data_keys[len(data_keys) - len(rare_values):]
-
-        files_per_license_rare_ax.bar(
-            range(len(rare_keys)),
-            rare_values,
-            tick_label=rare_keys,
-            align='center',
-            color='maroon',
-            edgecolor='',
+        files_per_license_zoomed_ax.barh(
+            range(len(data_keys)),
+            data_values,
+            tick_label=data_keys,
+            align="center",
+            color=CONFIG["ColorMap"][1],
+            edgecolor="",
         )
 
-        files_per_license_ax.set_xticklabels(
-            files_per_license_ax.xaxis.get_majorticklabels(),
-            rotation=90,
-            horizontalalignment='center',
-        )
+        files_per_license_ax.set_xlabel("# of files")
+        files_per_license_zoomed_ax.set_xlabel("# of files")
 
-        files_per_license_rare_ax.set_xticklabels(
-            files_per_license_rare_ax.xaxis.get_majorticklabels(),
-            rotation=90,
-            horizontalalignment='center',
-        )
+        files_per_license_ax.set_ylim(-9 / 8, len(data_keys))
+        files_per_license_zoomed_ax.set_ylim(-9 / 8, len(data_keys))
+        files_per_license_zoomed_ax.set_xlim(0, 35)
 
-        files_per_license_ax.set_ylabel("# of files")
-        files_per_license_rare_ax.set_ylabel("# of files")
-
-        files_per_license_ax.set_xlim(-9 / 8, len(data_keys))
-        files_per_license_rare_ax.set_xlim(-9 / 8, len(data_keys))
-
-        files_per_license_ax.grid(axis='y')
-        files_per_license_rare_ax.grid(axis='y')
-
-        files_per_license_fig.subplots_adjust(bottom=0.25)
-
-        plt.show()
+        files_per_license_ax.grid(axis="x")
+        files_per_license_zoomed_ax.grid(axis="x")
 
         # histogram showing ranks for when manual license matches ranked
         # licenses
