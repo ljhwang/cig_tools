@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
         files_per_license_fig = plt.figure()
         files_per_license_fig.suptitle(
-            "# of files per license (manual best-effort)"
+            "# of Files Per License (Manually Classified)"
         )
 
         files_per_license_fig.add_subplot(2,1,1)
