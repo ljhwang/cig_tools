@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 
-import config_handling
+import utils.load_config as utils
 
 import cli_parser.main_parser as main_parser
 
@@ -18,11 +18,11 @@ def main(args):
     if args.command == "license":
         license_command.main(args, None)
     else:
-        config = config_handling.load_configfile()
+        config = utils.load_config(".")
         if args.command == "check" or args.command == "check-project":
             check_command.main(args, config)
         elif args.command == "config":
-            config_command.main(args, config)
+            config_command.main(args)
         elif args.command == "write":
             write_command.main(args, config)
 
