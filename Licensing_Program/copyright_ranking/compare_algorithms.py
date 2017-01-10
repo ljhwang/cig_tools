@@ -38,7 +38,16 @@ CONFIG = {
                 PRIMARY KEY (file, algorithm, license)
             );
         """,
+    "ColorMap" : list(
+        itertools.permutations((2 / 8, 3 / 8, 4 / 8, 5 / 8, 6 / 8), 3)
+    ),
 }
+
+CONFIG["ColorMap"] = (
+    CONFIG["ColorMap"][0::3]
+    + CONFIG["ColorMap"][1::3]
+    + CONFIG["ColorMap"][2::3]
+)
 
 if __name__ == "__main__":
     with sql.connect(
