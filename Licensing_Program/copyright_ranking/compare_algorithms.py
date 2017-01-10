@@ -128,12 +128,20 @@ if __name__ == "__main__":
         files_per_license_ax.grid(axis="x")
         files_per_license_zoomed_ax.grid(axis="x")
 
-        # histogram showing ranks for when manual license matches ranked
-        # licenses
+        # histograms showing rank distribution for correctly and incorrectly
+        # ranked licenses (matching or not matching manual license
+        # determination)
+        rank_dist_fig = plt.figure()
+
+        rank_dist_fig.add_subplot(1,2,1)
+        correctly_ranked_ax = rank_dist_fig.gca()
+        rank_dist_fig.add_subplot(1,2,2)
+        incorrectly_ranked_ax = rank_dist_fig.gca()
+
         cursor = cursor.execute("""
             SELECT
+              calculated_license_rank.license = project_files.manual_license,
               ranking_algorithms.name,
-              licenses.name,
               calculated_license_rank.ranking
             FROM
                   calculated_license_rank
@@ -145,65 +153,52 @@ if __name__ == "__main__":
                   ranking_algorithms
                 ON
                   calculated_license_rank.algorithm = ranking_algorithms.id
-              JOIN
-                  licenses
-                ON
-                  project_files.manual_license = licenses.id
             GROUP BY
                 calculated_license_rank.file,
                 calculated_license_rank.algorithm
               HAVING
                 MAX(calculated_license_rank.ranking)
-          INTERSECT
-            SELECT
-              ranking_algorithms.name,
-              licenses.name,
-              calculated_license_rank.ranking
-            FROM
-                  calculated_license_rank
-              JOIN
-                  project_files
-                ON
-                  calculated_license_rank.file = project_files.id
-              JOIN
-                  ranking_algorithms
-                ON
-                  calculated_license_rank.algorithm = ranking_algorithms.id
-              JOIN
-                  licenses
-                ON
-                  project_files.manual_license = licenses.id
-            WHERE
-                calculated_license_rank.license = project_files.manual_license
         """)
 
-        data = collections.defaultdict(list)
+        data_matching = collections.defaultdict(list)
+        data_not_matching = collections.defaultdict(list)
 
-        #for algorithm, license, ranking in cursor:
-        #    data[(algorithm, license)].append(ranking)
+        for match, algorithm, ranking in cursor:
+            if match:
+                data_matching[algorithm].append(ranking)
+            else:
+                data_not_matching[algorithm].append(ranking)
 
-        for algorithm, license, ranking in cursor:
-            data[algorithm].append(ranking)
-
-        correctly_ranked_fig = plt.figure()
-        correctly_ranked_fig.suptitle(
-            "Sameness Distribution of Files Correctly Ranked"
-        )
-
-        correctly_ranked_fig.add_subplot()
-        correctly_ranked_ax = correctly_ranked_fig.gca()
-
-        data_keys, data_values = zip(*sorted(data.items()))
+        data_keys_match, data_values_match = zip(*sorted(data_matching.items()))
+        data_keys_nomatch, data_values_nomatch = zip(*sorted(
+            data_not_matching.items()
+        ))
 
         correctly_ranked_ax.hist(
-            data_values,
+            data_values_match,
             range=(0,1),
             bins=50,
-            color=CONFIG["ColorList"][2:len(data_values) + 2],
+            color=CONFIG["ColorList"][2:len(data_values_match) + 2],
             edgecolor="None",
             label=[
-                "{} - Total: {}".format(key, len(data[key]))
-                for key in data_keys
+                "{} - Total: {}".format(key, len(data_matching[key]))
+                for key in data_keys_match
+            ],
+        )
+
+        incorrectly_ranked_ax.hist(
+            data_values_nomatch,
+            range=(0,1),
+            bins=50,
+            color=(
+                CONFIG["ColorList"]
+                    [2 + len(data_values_match)
+                    :2 + len(data_values_match) + len(data_values_nomatch)]
+            ),
+            edgecolor="None",
+            label=[
+                "{} - Total: {}".format(key, len(data_not_matching[key]))
+                for key in data_keys_nomatch
             ],
         )
 
@@ -211,73 +206,25 @@ if __name__ == "__main__":
             "{:.0%}".format(tick)
             for tick in correctly_ranked_ax.get_xticks()
         ])
+        incorrectly_ranked_ax.set_xticklabels([
+            "{:.0%}".format(tick)
+            for tick in incorrectly_ranked_ax.get_xticks()
+        ])
+
+        correctly_ranked_ax.set_title(
+            "Sameness Distribution of Files Correctly Ranked"
+        )
+        incorrectly_ranked_ax.set_title(
+            "Sameness Distribution of Files Incorrectly Ranked"
+        )
 
         correctly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
-        correctly_ranked_ax.set_ylim(0, 10)
+        incorrectly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
 
         correctly_ranked_ax.legend()
+        incorrectly_ranked_ax.legend()
+
         correctly_ranked_ax.grid(True)
+        incorrectly_ranked_ax.grid(True)
 
         plt.show()
-
-        # histogram showing ranks for when manual license contradicts top
-        # ranked license
-        cursor = cursor.execute("""
-            SELECT
-              ranking_algorithms.name,
-              project_files.manual_license,
-              calculated_license_rank.license,
-              calculated_license_rank.ranking
-            FROM
-                  calculated_license_rank
-              JOIN
-                  project_files
-                ON
-                  calculated_license_rank.file = project_files.id
-              JOIN
-                  ranking_algorithms
-                ON
-                  calculated_license_rank.algorithm = ranking_algorithms.id
-            GROUP BY
-                calculated_license_rank.file,
-                calculated_license_rank.algorithm
-              HAVING
-                MAX(calculated_license_rank.ranking)
-          INTERSECT
-            SELECT
-              ranking_algorithms.name,
-              project_files.manual_license,
-              calculated_license_rank.license,
-              calculated_license_rank.ranking
-            FROM
-                  calculated_license_rank
-              JOIN
-                  project_files
-                ON
-                  calculated_license_rank.file = project_files.id
-              JOIN
-                  ranking_algorithms
-                ON
-                  calculated_license_rank.algorithm = ranking_algorithms.id
-            WHERE
-                calculated_license_rank.license != project_files.manual_license
-        """)
-
-        data = collections.defaultdict(list)
-
-        license_cursor = conn.cursor()
-
-        for algorithm, manual_license, ranked_license, ranking in cursor:
-            (manual_license,) = license_cursor.execute(
-                "SELECT name FROM licenses WHERE id = ?",
-                [manual_license],
-            ).fetchone()
-
-            (ranked_license,) = license_cursor.execute(
-                "SELECT name FROM licenses WHERE id = ?",
-                [ranked_license],
-            ).fetchone()
-
-            data[(algorithm, manual_license, ranked_license)].append(ranking)
-
-        pprint(data)
