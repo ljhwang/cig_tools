@@ -38,15 +38,19 @@ CONFIG = {
                 PRIMARY KEY (file, algorithm, license)
             );
         """,
-    "ColorMap" : list(
+    "ColorList" : list(
         itertools.permutations((2 / 8, 3 / 8, 4 / 8, 5 / 8, 6 / 8), 3)
     ),
 }
 
-CONFIG["ColorMap"] = (
-    CONFIG["ColorMap"][0::3]
-    + CONFIG["ColorMap"][1::3]
-    + CONFIG["ColorMap"][2::3]
+CONFIG["ColorList"] = (
+    CONFIG["ColorList"][0::7]
+    + CONFIG["ColorList"][1::7]
+    + CONFIG["ColorList"][2::7]
+    + CONFIG["ColorList"][3::7]
+    + CONFIG["ColorList"][4::7]
+    + CONFIG["ColorList"][5::7]
+    + CONFIG["ColorList"][6::7]
 )
 
 if __name__ == "__main__":
@@ -99,7 +103,7 @@ if __name__ == "__main__":
             data_values,
             tick_label=data_keys,
             align="center",
-            color=CONFIG["ColorMap"][0],
+            color=CONFIG["ColorList"][0],
             edgecolor="",
         )
 
@@ -108,7 +112,7 @@ if __name__ == "__main__":
             data_values,
             tick_label=data_keys,
             align="center",
-            color=CONFIG["ColorMap"][1],
+            color=CONFIG["ColorList"][1],
             edgecolor="",
         )
 
