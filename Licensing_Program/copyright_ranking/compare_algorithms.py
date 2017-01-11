@@ -111,7 +111,7 @@ if __name__ == "__main__":
             data_values,
             tick_label=data_keys,
             align="center",
-            color=list(islice(CONFIG["ColorList"], 1, 2)),
+            color=list(islice(CONFIG["ColorList"], 1)),
             edgecolor="",
         )
 
@@ -186,7 +186,7 @@ if __name__ == "__main__":
             data_values_match,
             range=(0,1),
             bins=50,
-            color=list(islice(CONFIG["ColorList"], 2, len(data_matching) + 2)),
+            color=list(islice(CONFIG["ColorList"], len(data_matching))),
             edgecolor="None",
             label=[
                 "{} - Total: {}".format(key, len(data_matching[key]))
@@ -198,11 +198,7 @@ if __name__ == "__main__":
             data_values_nomatch,
             range=(0,1),
             bins=50,
-            color=list(islice(
-                CONFIG["ColorList"],
-                2 + len(data_matching),
-                2 + len(data_matching) + len(data_not_matching)
-            )),
+            color=list(islice(CONFIG["ColorList"], len(data_not_matching))),
             edgecolor="None",
             label=[
                 "{} - Total: {}".format(key, len(data_not_matching[key]))
@@ -274,11 +270,7 @@ if __name__ == "__main__":
                     )
                     for match, algorithm in license_dict_keys
                 ],
-                color=list(islice(
-                    CONFIG["ColorList"],
-                    4 * index,
-                    4 * index + len(license_dict),
-                )),
+                color=list(islice(CONFIG["ColorList"], len(license_dict))),
                 edgecolor="None",
                 width=1 / 100,
             )
