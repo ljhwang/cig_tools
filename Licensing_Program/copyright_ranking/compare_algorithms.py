@@ -129,6 +129,7 @@ if __name__ == "__main__":
         # ranked licenses (matching or not matching manual license
         # determination)
         rank_dist_fig = plt.figure()
+        rank_dist_license_fig = plt.figure()
 
         rank_dist_fig.add_subplot(1,2,1)
         correctly_ranked_ax = rank_dist_fig.gca()
@@ -139,6 +140,7 @@ if __name__ == "__main__":
             SELECT
               calculated_license_rank.license = project_files.manual_license,
               ranking_algorithms.name,
+              licenses.name,
               calculated_license_rank.ranking
             FROM
                   calculated_license_rank
@@ -150,6 +152,10 @@ if __name__ == "__main__":
                   ranking_algorithms
                 ON
                   calculated_license_rank.algorithm = ranking_algorithms.id
+              JOIN
+                  licenses
+                ON
+                  project_files.manual_license = licenses.id
             GROUP BY
                 calculated_license_rank.file,
                 calculated_license_rank.algorithm
@@ -159,12 +165,17 @@ if __name__ == "__main__":
 
         data_matching = defaultdict(list)
         data_not_matching = defaultdict(list)
+        data_per_license = defaultdict(lambda: defaultdict(list))
 
-        for match, algorithm, ranking in cursor:
+        for match, algorithm, manual_license, ranking in cursor:
             if match:
                 data_matching[algorithm].append(ranking)
             else:
                 data_not_matching[algorithm].append(ranking)
+
+            data_per_license[manual_license][
+                (bool(match), algorithm)
+            ].append(ranking)
 
         data_keys_match, data_values_match = zip(*sorted(data_matching.items()))
         data_keys_nomatch, data_values_nomatch = zip(*sorted(
@@ -226,5 +237,60 @@ if __name__ == "__main__":
 
         correctly_ranked_ax.grid(True)
         incorrectly_ranked_ax.grid(True)
+
+        data_per_license = dict(
+            filter(
+                lambda pair: 4 < sum(len(ranks) for ranks in pair[1].values()),
+                data_per_license.items(),
+            )
+        )
+
+        for index, (license, license_dict) in enumerate(
+            sorted(
+                data_per_license.items(),
+                key=lambda pair: sum(len(ranks) for ranks in pair[1].values()),
+                reverse=True,
+            ),
+            1,
+        ):
+            license_dict_keys, license_dict_values = zip(
+                *sorted(license_dict.items(), reverse=True)
+            )
+
+            rank_dist_license_fig.add_subplot(
+                math.floor(len(data_per_license) ** (1 / 2)),
+                math.ceil(len(data_per_license) ** (1 / 2)),
+                index,
+            )
+            ax = rank_dist_license_fig.gca()
+
+            ax.hist(
+                license_dict_values,
+                bins=50,
+                label=[
+                    "{} {}".format(
+                        algorithm,
+                        "Correctly Ranked" if match else "Incorrectly Ranked"
+                    )
+                    for match, algorithm in license_dict_keys
+                ],
+                color=list(islice(
+                    CONFIG["ColorList"],
+                    4 * index,
+                    4 * index + len(license_dict),
+                )),
+                edgecolor="None",
+                width=1 / 100,
+            )
+
+            ax.set_xlim(0, 1)
+            ax.set_xticklabels([
+                "{:.0%}".format(tick)
+                for tick in ax.get_xticks()
+            ])
+
+            ax.grid(True)
+            ax.legend(loc='best', fontsize="x-small")
+            ax.set_title("{}".format(license))
 
         plt.show()
