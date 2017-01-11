@@ -130,6 +130,9 @@ if __name__ == "__main__":
         # determination)
         rank_dist_fig = plt.figure()
         rank_dist_license_fig = plt.figure()
+        rank_dist_license_fig.suptitle(
+            "Sameness Distribution per License"
+        )
 
         rank_dist_fig.add_subplot(1,2,1)
         correctly_ranked_ax = rank_dist_fig.gca()
@@ -262,6 +265,7 @@ if __name__ == "__main__":
 
             ax.hist(
                 license_dict_values,
+                range=(0,1),
                 bins=50,
                 label=[
                     "{} {}".format(
@@ -273,16 +277,16 @@ if __name__ == "__main__":
                 color=list(islice(CONFIG["ColorList"], len(license_dict))),
                 edgecolor="None",
                 width=1 / 100,
+                rwidth=1,
             )
 
-            ax.set_xlim(0, 1)
             ax.set_xticklabels([
                 "{:.0%}".format(tick)
                 for tick in ax.get_xticks()
             ])
 
             ax.grid(True)
-            ax.legend(loc='best', fontsize="x-small")
+            ax.legend(loc='best', fontsize="small")
             ax.set_title("{}".format(license))
 
         plt.show()
