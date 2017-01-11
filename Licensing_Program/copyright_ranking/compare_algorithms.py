@@ -1,13 +1,14 @@
 #! /usr/bin/env python3
 
-import collections
-import itertools
+from collections import defaultdict
+from itertools import cycle, islice, product
 import math
 import sqlite3 as sql
 
 from pprint import pprint
 
 import matplotlib as mpl
+import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 
 CONFIG = {
@@ -40,20 +41,16 @@ CONFIG = {
                 PRIMARY KEY (file, algorithm, license)
             );
         """,
-    "ColorList" : list(
-        itertools.permutations((2 / 8, 3 / 8, 4 / 8, 5 / 8, 6 / 8), 3)
+    "ColorList" : cycle(
+        colors.hsv_to_rgb(triple)
+        for triple in product(
+            [i / 8 for i in range(8)],
+            [5 / 6],
+            [7 / 8, 5 / 8],
+        )
     ),
 }
 
-CONFIG["ColorList"] = (
-    CONFIG["ColorList"][0::7]
-    + CONFIG["ColorList"][1::7]
-    + CONFIG["ColorList"][2::7]
-    + CONFIG["ColorList"][3::7]
-    + CONFIG["ColorList"][4::7]
-    + CONFIG["ColorList"][5::7]
-    + CONFIG["ColorList"][6::7]
-)
 
 if __name__ == "__main__":
     with sql.connect(
@@ -105,7 +102,7 @@ if __name__ == "__main__":
             data_values,
             tick_label=data_keys,
             align="center",
-            color=CONFIG["ColorList"][0],
+            color=list(islice(CONFIG["ColorList"], 1)),
             edgecolor="",
         )
 
@@ -114,7 +111,7 @@ if __name__ == "__main__":
             data_values,
             tick_label=data_keys,
             align="center",
-            color=CONFIG["ColorList"][1],
+            color=list(islice(CONFIG["ColorList"], 1, 2)),
             edgecolor="",
         )
 
@@ -160,8 +157,8 @@ if __name__ == "__main__":
                 MAX(calculated_license_rank.ranking)
         """)
 
-        data_matching = collections.defaultdict(list)
-        data_not_matching = collections.defaultdict(list)
+        data_matching = defaultdict(list)
+        data_not_matching = defaultdict(list)
 
         for match, algorithm, ranking in cursor:
             if match:
@@ -178,7 +175,7 @@ if __name__ == "__main__":
             data_values_match,
             range=(0,1),
             bins=50,
-            color=CONFIG["ColorList"][2:len(data_values_match) + 2],
+            color=list(islice(CONFIG["ColorList"], 2, len(data_matching) + 2)),
             edgecolor="None",
             label=[
                 "{} - Total: {}".format(key, len(data_matching[key]))
@@ -190,11 +187,11 @@ if __name__ == "__main__":
             data_values_nomatch,
             range=(0,1),
             bins=50,
-            color=(
-                CONFIG["ColorList"]
-                    [2 + len(data_values_match)
-                    :2 + len(data_values_match) + len(data_values_nomatch)]
-            ),
+            color=list(islice(
+                CONFIG["ColorList"],
+                2 + len(data_matching),
+                2 + len(data_matching) + len(data_not_matching)
+            )),
             edgecolor="None",
             label=[
                 "{} - Total: {}".format(key, len(data_not_matching[key]))
@@ -220,6 +217,9 @@ if __name__ == "__main__":
 
         correctly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
         incorrectly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
+
+        correctly_ranked_ax.set_ylim(0, 600)
+        incorrectly_ranked_ax.set_ylim(0, 600)
 
         correctly_ranked_ax.legend()
         incorrectly_ranked_ax.legend()
