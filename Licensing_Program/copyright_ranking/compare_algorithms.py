@@ -44,9 +44,14 @@ CONFIG = {
     "ColorList" : cycle(
         colors.hsv_to_rgb(triple)
         for triple in product(
-            [i / 8 for i in range(8)],
+            [
+                 0 / 16,  1 / 16,  2 / 16,  3 / 16,
+                 4 / 16,                    7 / 16,
+                 8 / 16,  9 / 16,
+                12 / 16, 13 / 16, 14 / 16,
+            ],
             [5 / 6],
-            [7 / 8, 5 / 8],
+            [14 / 16, 11 / 16],
         )
     ),
 }
