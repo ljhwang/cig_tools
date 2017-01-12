@@ -7,7 +7,6 @@ import sqlite3 as sql
 
 from pprint import pprint
 
-import matplotlib as mpl
 import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 
