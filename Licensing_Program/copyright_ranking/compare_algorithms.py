@@ -129,15 +129,16 @@ if __name__ == "__main__":
         # ranked licenses (matching or not matching manual license
         # determination)
         rank_dist_fig = plt.figure()
+        rank_dist_fig.suptitle(
+            "Sameness Distribution"
+        )
         rank_dist_license_fig = plt.figure()
         rank_dist_license_fig.suptitle(
             "Sameness Distribution per License"
         )
 
-        rank_dist_fig.add_subplot(1,2,1)
-        correctly_ranked_ax = rank_dist_fig.gca()
-        rank_dist_fig.add_subplot(1,2,2)
-        incorrectly_ranked_ax = rank_dist_fig.gca()
+        rank_dist_fig.add_subplot()
+        rank_dist_ax = rank_dist_fig.gca()
 
         cursor = cursor.execute("""
             SELECT
@@ -166,76 +167,42 @@ if __name__ == "__main__":
                 MAX(calculated_license_rank.ranking)
         """)
 
-        data_matching = defaultdict(list)
-        data_not_matching = defaultdict(list)
+        data = defaultdict(list)
         data_per_license = defaultdict(lambda: defaultdict(list))
 
         for match, algorithm, manual_license, ranking in cursor:
-            if match:
-                data_matching[algorithm].append(ranking)
-            else:
-                data_not_matching[algorithm].append(ranking)
+            data[(bool(match), algorithm)].append(ranking)
 
             data_per_license[manual_license][
                 (bool(match), algorithm)
             ].append(ranking)
 
-        data_keys_match, data_values_match = zip(*sorted(data_matching.items()))
-        data_keys_nomatch, data_values_nomatch = zip(*sorted(
-            data_not_matching.items()
-        ))
+        data_keys, data_values = zip(*sorted(data.items()))
 
-        correctly_ranked_ax.hist(
-            data_values_match,
+        rank_dist_ax.hist(
+            data_values,
             range=(0,1),
             bins=50,
-            color=list(islice(CONFIG["ColorList"], len(data_matching))),
+            color=list(islice(CONFIG["ColorList"], len(data))),
             edgecolor="None",
             label=[
-                "{} - Total: {}".format(key, len(data_matching[key]))
-                for key in data_keys_match
+                "{} - {} {}".format(
+                    algorithm,
+                    len(data[(match, algorithm)]),
+                    "correctly ranked" if match else "incorrectly ranked",
+                )
+                for match, algorithm in data_keys
             ],
         )
 
-        incorrectly_ranked_ax.hist(
-            data_values_nomatch,
-            range=(0,1),
-            bins=50,
-            color=list(islice(CONFIG["ColorList"], len(data_not_matching))),
-            edgecolor="None",
-            label=[
-                "{} - Total: {}".format(key, len(data_not_matching[key]))
-                for key in data_keys_nomatch
-            ],
-        )
-
-        correctly_ranked_ax.set_xticklabels([
+        rank_dist_ax.set_xticklabels([
             "{:.0%}".format(tick)
-            for tick in correctly_ranked_ax.get_xticks()
-        ])
-        incorrectly_ranked_ax.set_xticklabels([
-            "{:.0%}".format(tick)
-            for tick in incorrectly_ranked_ax.get_xticks()
+            for tick in rank_dist_ax.get_xticks()
         ])
 
-        correctly_ranked_ax.set_title(
-            "Sameness Distribution of Files Correctly Ranked"
-        )
-        incorrectly_ranked_ax.set_title(
-            "Sameness Distribution of Files Incorrectly Ranked"
-        )
-
-        correctly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
-        incorrectly_ranked_ax.set_xlabel("Algorithm Result (Sameness)")
-
-        correctly_ranked_ax.set_ylim(0, 600)
-        incorrectly_ranked_ax.set_ylim(0, 600)
-
-        correctly_ranked_ax.legend()
-        incorrectly_ranked_ax.legend()
-
-        correctly_ranked_ax.grid(True)
-        incorrectly_ranked_ax.grid(True)
+        rank_dist_ax.set_xlabel("Algorithm Result (Sameness)")
+        rank_dist_ax.legend(loc="best")
+        rank_dist_ax.grid(True)
 
         data_per_license = dict(
             filter(
@@ -268,13 +235,17 @@ if __name__ == "__main__":
                 range=(0,1),
                 bins=50,
                 label=[
-                    "{} {}".format(
+                    "{} - {} {}".format(
                         algorithm,
-                        "Correctly Ranked" if match else "Incorrectly Ranked"
+                        len(license_dict[(match, algorithm)]),
+                        "correctly ranked" if match else "incorrectly ranked",
                     )
                     for match, algorithm in license_dict_keys
                 ],
-                color=list(islice(CONFIG["ColorList"], len(license_dict))),
+                color=list(islice(
+                    CONFIG["ColorList"],
+                    len(license_dict) + len(license_dict) % 2,
+                ))[:len(license_dict)],
                 edgecolor="None",
                 width=1 / 100,
                 rwidth=1,
