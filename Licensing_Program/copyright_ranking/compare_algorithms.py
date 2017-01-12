@@ -1,8 +1,6 @@
 #! /usr/bin/env python3
 
-from collections import defaultdict
-from itertools import cycle, islice, product
-import math
+from itertools import cycle, product
 import sqlite3 as sql
 
 from pprint import pprint
