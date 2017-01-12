@@ -74,11 +74,6 @@ def hist_sameness_distributions(cursor, colorlist):
         ],
     )
 
-    rank_dist_ax.set_xticklabels([
-        "{:.0%}".format(tick)
-        for tick in rank_dist_ax.get_xticks()
-    ])
-
     rank_dist_ax.set_xlabel("Algorithm Result (Sameness)")
     rank_dist_ax.legend(loc="best")
     rank_dist_ax.grid(True)
@@ -129,11 +124,6 @@ def hist_sameness_distributions(cursor, colorlist):
             width=1 / 100,
             rwidth=1,
         )
-
-        ax.set_xticklabels([
-            "{:.0%}".format(tick)
-            for tick in ax.get_xticks()
-        ])
 
         ax.grid(True)
         ax.legend(loc='best', fontsize="small")
