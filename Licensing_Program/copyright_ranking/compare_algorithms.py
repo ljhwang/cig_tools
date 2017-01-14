@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 
 from bar_graph_manual_licenses import bar_graph_manual_licenses
 from hist_sameness_distributions import hist_sameness_distributions
+from hist_cecill_deltaerror_rank_distribution \
+    import hist_cecill_deltaerror_rank_distribution
 
 CONFIG = {
     "Specfem3dDB" : "specfem3d_license_info.db",
@@ -62,10 +64,14 @@ if __name__ == "__main__":
         "file:{}?mode=ro".format(CONFIG["Specfem3dDB"]),
         uri=True,
     ) as conn:
+
         cursor = conn.cursor()
         bar_graph_manual_licenses(cursor, CONFIG["ColorList"])
 
         cursor = conn.cursor()
         hist_sameness_distributions(cursor, CONFIG["ColorList"])
+
+        cursor = conn.cursor()
+        hist_cecill_deltaerror_rank_distribution(cursor, CONFIG["ColorList"])
 
         plt.show()
