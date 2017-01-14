@@ -23,7 +23,7 @@ def hist_sameness_distributions(cursor, colorlist):
         SELECT
           calculated_license_rank.license = project_files.manual_license,
           ranking_algorithms.name,
-          licenses.name,
+          manu_licenses.name,
           calculated_license_rank.ranking
         FROM
               calculated_license_rank
@@ -36,9 +36,9 @@ def hist_sameness_distributions(cursor, colorlist):
             ON
               calculated_license_rank.algorithm = ranking_algorithms.id
           JOIN
-              licenses
+              licenses AS manu_licenses
             ON
-              project_files.manual_license = licenses.id
+              project_files.manual_license = manu_licenses.id
         GROUP BY
             calculated_license_rank.file,
             calculated_license_rank.algorithm
@@ -60,8 +60,8 @@ def hist_sameness_distributions(cursor, colorlist):
 
     rank_dist_ax.hist(
         data_values,
-        range=(0,1),
         bins=50,
+        range=(0,1),
         color=list(islice(colorlist, len(data))),
         edgecolor="None",
         label=[
@@ -72,6 +72,8 @@ def hist_sameness_distributions(cursor, colorlist):
             )
             for match, algorithm in data_keys
         ],
+        width=1 / 200,
+        rwidth=1,
     )
 
     rank_dist_ax.set_xlim(0,1)
@@ -108,8 +110,8 @@ def hist_sameness_distributions(cursor, colorlist):
 
         ax.hist(
             license_dict_values,
-            range=(0,1),
             bins=50,
+            range=(0,1),
             label=[
                 "{} - {} {}".format(
                     algorithm,
